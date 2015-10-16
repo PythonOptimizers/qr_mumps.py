@@ -1,7 +1,7 @@
 from cysparse.sparse.ll_mat import *
 import cysparse.types.cysparse_types as types
 
-from mumps.mumps_context import MUMPSContext
+from qr_mumps.solver import QRMUMPSSolver
 
 import numpy as np
 
@@ -9,28 +9,31 @@ import sys
 
 
 A = NewLLSparseMatrix(mm_filename=sys.argv[1], itype=types.INT32_T, dtype=types.FLOAT64_T)
+(m, n) = A.shape
+(i,j,val) = A.find()
+(i1,j1,val1) = A.triu(1).find()
+row = np.hstack((i,i1))
+col = np.hstack((j,j1))
+val = np.hstack((val, val1))
 
-print A
+B = NewLLSparseMatrix(nrow=m, ncol=n, itype=types.INT32_T, dtype=types.FLOAT64_T)
+B.put_triplet(row, col, val)
 
 
-(n, m) = A.shape
 e = np.ones(n, 'd')
-#rhs = np.zeros(n, 'd')
 rhs = A*e
 
-context = MUMPSContext(A, verbose=True)
+solver = QRMUMPSSolver(B, verbose=True)
 
-print 'MUMPS version: ', context.version_number
+solver.analyze()
 
-context.analyze()
-context.factorize()
+solver.factorize()
+x = solver.least_squares(rhs)
+print rhs
+np.testing.assert_almost_equal(x,e)
 
-x = context.solve(rhs=rhs)
-x = context.refine(rhs, 10)
-
-print x
-sys.exit(0)
-
+x = solver.solve(rhs)
+np.testing.assert_almost_equal(x,e)
 
 print "= " * 80
 
@@ -40,19 +43,5 @@ B[: ,2] = 3 * B[:,2]
 
 rhs = A * B
 
-x = context.solve(rhs=rhs)
-print x
-
-print "x" * 80
-print "sparse example"
-
-
-CSC = A.to_csc()
-
-rhs_col_ptr, rhs_row_ind, rhs_val = CSC.get_numpy_arrays()
-print rhs_col_ptr, rhs_row_ind, rhs_val
-print type(rhs_col_ptr), type(rhs_row_ind), type(rhs_val)
-
-x = context.solve(rhs_col_ptr=rhs_col_ptr, rhs_row_ind=rhs_row_ind, rhs_val=rhs_val)
-
-print x
+x = solver.solve(rhs)
+np.testing.assert_almost_equal(x,B)

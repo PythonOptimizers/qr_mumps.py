@@ -73,7 +73,11 @@ def numpy_to_qr_mumps_type(numpy_type):
         raise TypeError("Not a recognized Numpy type")
 
 def numpy_to_c(numpy_type):
-    if numpy_type in ['FLOAT32']:
+    if numpy_type in ['INT32']:
+        return 'int'
+    elif numpy_type in ['INT64']:
+        return 'long'
+    elif numpy_type in ['FLOAT32']:
         return 'float'
     elif numpy_type in ['FLOAT64']:
         return 'double'
@@ -100,7 +104,7 @@ SETUP_PY_FILE = os.path.join(PATH, 'setup.py')
 
 MUMPS_DIR = os.path.join(PATH, 'qr_mumps')
 MUMPS_TEMPLATE_DIR = os.path.join(MUMPS_DIR, 'src')
-MUMPS_FACTORY_METHOD_FILE = os.path.join(MUMPS_DIR, 'qr_mumps_context.cpy')
+MUMPS_FACTORY_METHOD_FILE = os.path.join(MUMPS_DIR, 'solver.cpy')
 MUMPS_DECLARATION_FILES = glob.glob(os.path.join(MUMPS_TEMPLATE_DIR, '*.cpd'))
 MUMPS_DEFINITION_FILES = glob.glob(os.path.join(MUMPS_TEMPLATE_DIR, '*.cpx'))
 
@@ -134,8 +138,8 @@ if __name__ == "__main__":
     ELEMENT_TYPES = ['FLOAT32', 'FLOAT64', 'COMPLEX64', 'COMPLEX128']
     COMPLEX_ELEMENT_TYPES = ['COMPLEX64', 'COMPLEX128']
 
-    GENERAL_CONTEXT = {'qr_mumps_index_list': INDEX_TYPES,
-                       'qr_mumps_type_list': ELEMENT_TYPES,
+    GENERAL_CONTEXT = {'index_list': INDEX_TYPES,
+                       'type_list': ELEMENT_TYPES,
                        'complex_list' : COMPLEX_ELEMENT_TYPES}
 
     GENERAL_ENVIRONMENT = Environment(

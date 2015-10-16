@@ -3,17 +3,17 @@ Factory method to access qr_mumps.
 """
 import numpy as np
 
-{% for index_type in qr_mumps_index_list %}
-    {% for element_type in qr_mumps_type_list %}
-from qr_mumps.src.qr_mumps_@index_type@_@element_type@ import Numpyqr_mumpsContext_@index_type@_@element_type@
+{% for index_type in index_list %}
+    {% for element_type in type_list %}
+from qr_mumps.src.qr_mumps_@index_type@_@element_type@ import NumpyQRMUMPSSolver_@index_type@_@element_type@
     {% endfor %}
 {% endfor %}
 
 cysparse_installed = False
 try:
-{% for index_type in qr_mumps_index_list %}
-    {% for element_type in qr_mumps_type_list %}
-    from qr_mumps.src.cysparse_qr_mumps_@index_type@_@element_type@ import CySparseqr_mumpsContext_@index_type@_@element_type@
+{% for index_type in index_list %}
+    {% for element_type in type_list %}
+    from qr_mumps.src.cysparse_qr_mumps_@index_type@_@element_type@ import CySparseQRMUMPSSolver_@index_type@_@element_type@
     {% endfor %}
     from cysparse.sparse.ll_mat import PyLLSparseMatrix_Check
     from cysparse.types.cysparse_types import *
@@ -23,25 +23,25 @@ except:
     pass
 
 allowed_types = '\titype:
-{%- for index_name in qr_mumps_index_list -%}
+{%- for index_name in index_list -%}
     @index_name@
-    {%- if index_name != qr_mumps_index_list|last -%}
+    {%- if index_name != index_list|last -%}
     ,
     {%- endif -%}
 {%- endfor -%}
 \n\tdtype:
-{%- for element_name in qr_mumps_type_list -%}
+{%- for element_name in type_list -%}
     @element_name@
-    {%- if element_name != qr_mumps_type_list|last -%}
+    {%- if element_name != type_list|last -%}
     ,
     {%- endif -%}
 {%- endfor -%}
 \n'
 type_error_msg = 'Matrix has an index and/or element type that is incompatible with qr_mumps\nAllowed types:\n%s' % allowed_types
 
-def qr_mumpsContext(arg1, verbose=False):
+def QRMUMPSSolver(arg1, verbose=False):
     """
-    Create and return the right qr_mumps context based on the element type
+    Create and return the right qr_mumps solver based on the element type
     supplied as input.
 
     qr_mumps ("MUltifrontal Massively Parallel Solver") is a package for solving systems
@@ -58,11 +58,11 @@ def qr_mumpsContext(arg1, verbose=False):
     where D is block diagonal matrix.
     
     Args:
-        n: size of matrix A
+        m: number of line of matrix A
+        n: number of column of matrix A
         a_row: row indices of non zero elements of A
         a_col: column indices of non zero elements of A
         a_val: values of non zeros elements of A
-        sym:   a boolean indicating if A is a symmetric matrix or not
         verbose: a boolean to turn on or off the verbosity of qr_mumps
     """
     if isinstance(arg1, tuple):
@@ -78,26 +78,26 @@ def qr_mumpsContext(arg1, verbose=False):
         itype = a_row.dtype
         dtype = a_val.dtype
 
-{% for index_type in qr_mumps_index_list %}
-  {% if index_type == qr_mumps_index_list |first %}
+{% for index_type in index_list %}
+  {% if index_type == index_list |first %}
         if itype == np.@index_type|lower@:
-      {% for element_type in qr_mumps_type_list %}
-        {% if element_type == qr_mumps_type_list |first %}
+      {% for element_type in type_list %}
+        {% if element_type == type_list |first %}
             if dtype == np.@element_type|lower@:
         {% else %}
             elif dtype == np.@element_type|lower@:
         {% endif %}
-                return Numpyqr_mumpsContext_@index_type@_@element_type@(m, n, a_row, a_col, a_val, verbose=verbose)
+                return NumpyQRMUMPSSolver_@index_type@_@element_type@(m, n, a_row, a_col, a_val, verbose=verbose)
       {% endfor %}
   {% else %}
         elif itype == np.@index_type|lower@:
-      {% for element_type in qr_mumps_type_list %}
-        {% if element_type == qr_mumps_type_list |first %}
+      {% for element_type in type_list %}
+        {% if element_type == type_list |first %}
             if dtype == np.@element_type|lower@:
         {% else %}
             elif dtype == np.@element_type|lower@:
         {% endif %}
-                return Numpyqr_mumpsContext_@index_type@_@element_type@(m, n, a_row, a_col, a_val, verbose=verbose)
+                return NumpyQRMUMPSSolver_@index_type@_@element_type@(m, n, a_row, a_col, a_val, verbose=verbose)
       {% endfor %}
   {% endif %}
 {% endfor %}
@@ -112,26 +112,26 @@ def qr_mumpsContext(arg1, verbose=False):
         itype = A.itype
         dtype = A.dtype
 
-{% for index_type in qr_mumps_index_list %}
-    {% if index_type == qr_mumps_index_list |first %}
+{% for index_type in index_list %}
+    {% if index_type == index_list |first %}
         if itype == @index_type@_T:
-    {% for element_type in qr_mumps_type_list %}
-        {% if element_type == qr_mumps_type_list |first %}
+    {% for element_type in type_list %}
+        {% if element_type == type_list |first %}
             if dtype == @element_type@_T:
         {% else %}
             elif dtype == @element_type@_T:
         {% endif %}
-                return CySparseqr_mumpsContext_@index_type@_@element_type@(A, verbose=verbose)
+                return CySparseQRMUMPSSolver_@index_type@_@element_type@(A, verbose=verbose)
     {% endfor %}
     {% else %}
         elif itype == @index_type@_T:
-    {% for element_type in qr_mumps_type_list %}
-        {% if element_type == qr_mumps_type_list |first %}
+    {% for element_type in type_list %}
+        {% if element_type == type_list |first %}
             if dtype == @element_type@_T:
         {% else %}
             elif dtype == @element_type@_T:
         {% endif %}
-                return CySparseqr_mumpsContext_@index_type@_@element_type@(A, verbose=verbose)
+                return CySparseQRMUMPSSolver_@index_type@_@element_type@(A, verbose=verbose)
     {% endfor %}
     {% endif %}
 {% endfor %}

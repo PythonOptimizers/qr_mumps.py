@@ -82,9 +82,9 @@ cdef extern from "@type|numpy_to_qr_mumps_type@qrm_mumps.h":
         qrm_yes_=1
     
 
-cdef c_to_fortran_index_array(int * a, int a_size)
+cdef c_to_fortran_index_array(@index|numpy_to_c@ * a, @index|numpy_to_c@ a_size)
 
-cdef class Baseqr_mumpsContext_@index@_@type@:
+cdef class BaseQRMUMPSSolver_@index@_@type@:
     cdef:
 
         int nrow
@@ -93,9 +93,6 @@ cdef class Baseqr_mumpsContext_@index@_@type@:
 
         # MUMPS
         @type|numpy_to_qr_mumps_type@qrm_spmat_type_c params
-        int * a_row
-        int * a_col
-        @type|numpy_to_c@ * a_val
  
         char transp 
 
@@ -108,10 +105,7 @@ cdef class Baseqr_mumpsContext_@index@_@type@:
         object solve_stats
 
     cdef get_data_pointers(self,
-                           int * a_row,
-                           int * a_col,
+                           @index|numpy_to_c@ * a_row,
+                           @index|numpy_to_c@ * a_col,
                            @type|numpy_to_c@ * a_val)
-
-    cdef solve_dense(self, @type|numpy_to_c@ * rhs, @type|numpy_to_c@ * x, int nrhs)
-    cdef solve_dense_transp(self, @type|numpy_to_c@ * rhs, @type|numpy_to_c@ * x, int nrhs)
 

@@ -11,7 +11,9 @@ acol = np.array([1,2,5,0,5,1,3,4,6,1,2,1,3], dtype=np.int32)
 aval = np.array([0.7,0.6,0.4,0.1,0.1,0.3,0.6,0.7,0.2,0.5,0.2,0.1,0.6], dtype=np.float64)
 print A
 
-solver = QRMUMPSSolver((m, n, arow, acol, aval), verbose=False)
+for i in xrange(0,10):
+    solver = QRMUMPSSolver((m, n, arow, acol, aval), verbose=False)
+    print i
 
 solver.analyze()
 print solver.analyzed

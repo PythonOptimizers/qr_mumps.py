@@ -71,8 +71,8 @@ ext_params['extra_link_args'] = []
 
 context_ext_params = copy.deepcopy(ext_params)
 qr_mumps_ext = []
-{% for index_type in qr_mumps_index_list %}
-  {% for element_type in qr_mumps_type_list %}
+{% for index_type in index_list %}
+  {% for element_type in type_list %}
 qr_mumps_ext_params_@index_type@_@element_type@ = copy.deepcopy(ext_params)
 qr_mumps_ext_params_@index_type@_@element_type@['include_dirs'].extend(qr_mumps_include_dirs)
 qr_mumps_ext_params_@index_type@_@element_type@['library_dirs'] = qr_mumps_library_dirs
@@ -88,8 +88,8 @@ qr_mumps_ext.append(Extension(name="qr_mumps.src.qr_mumps_@index_type@_@element_
 {% endfor %}
 
 if build_cysparse_ext:
-{% for index_type in qr_mumps_index_list %}
-  {% for element_type in qr_mumps_type_list %}
+{% for index_type in index_list %}
+  {% for element_type in type_list %}
     cysparse_ext_params_@index_type@_@element_type@ = copy.deepcopy(ext_params)
     cysparse_ext_params_@index_type@_@element_type@['include_dirs'].extend(cysparse_rootdir)
     qr_mumps_ext.append(Extension(name="qr_mumps.src.cysparse_qr_mumps_@index_type@_@element_type@",
@@ -102,6 +102,7 @@ if build_cysparse_ext:
 
 
 packages_list = ['qr_mumps', 'qr_mumps.src', 'tests']
+
 
 CLASSIFIERS = """\
 Development Status :: 4 - Beta

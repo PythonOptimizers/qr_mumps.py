@@ -105,49 +105,52 @@ cdef extern from "@type|numpy_to_qr_mumps_type@qrm_mumps.h":
         qrm_yes_=1
     
 
-cdef c_to_fortran_index_array(int * a, int a_size):
+cdef c_to_fortran_index_array(@index|numpy_to_c@ * a, @index|numpy_to_c@ a_size):
     cdef:
-        int i
+        @index|numpy_to_c@ i
 
     for i from 0 <= i < a_size:
         a[i] += 1
 
 # MUMPS CONTEXT
-cdef class Baseqr_mumpsContext_@index@_@type@:
+cdef class BaseQRMUMPSSolver_@index@_@type@:
     """
-    Base MUMPS Context.
+    Base QR_MUMPS Context.
 
-    This version **only** deals pointers.
+    This version **only** deals with pointers.
 
-    We follow the common use of MUMPS. In particular, we use the same names for the methods of this
-    class as their corresponding counter-parts in MUMPS.
+    We follow the common use of QR_MUMPS. In particular, we use the same names for
+    the methods of this class as their corresponding counter-parts in MUMPS.
     """
 
-    def __cinit__(self, int m, int n, int nnz,
-                  comm_fortran=-987654, sym=False, verbose=False):
+    def __cinit__(self, @index|numpy_to_c@ m, @index|numpy_to_c@ n, @index|numpy_to_c@ nnz, verbose=False):
         """
         Args:
-            n: size of matrix A
+            m: number of lines of matrix A
+            n: number of columns of matrix A
             a_row: row indices pointer of non zero elements of A
             a_col: column indices pointer of non zero elements of A
             a_val: values pointer of non zeros elements of A
-            sym:   a boolean indicating if A is a symmetric matrix or not
             verbose: a boolean to turn on or off the verbosity of MUMPS
 
-        Warning: if the numpy arrays are modified externally by the user between 2 calls to solve,
-        the changes in arrays won't be passed to MUMPS.
+        Warning: if the numpy arrays are modified externally by the user between
+        two calls to solve, the changes in arrays won't be passed to QR_MUMPS.
 
         """
+
         self.nrow = m
         self.ncol = n
         self.nnz = nnz
 
         @type|numpy_to_qr_mumps_type@qrm_spmat_init_c(&self.params)
 
-        self.params.m = <int> self.nrow
-        self.params.n = <int> self.ncol
-        self.params.nz = <int> self.nnz
-
+        self.params.m = self.nrow
+        self.params.n = self.ncol
+        self.params.nz = self.nnz
+        self.params.irn = <@index|numpy_to_c@ *> PyMem_Malloc(nnz * sizeof(@index|numpy_to_c@))
+        self.params.jcn = <@index|numpy_to_c@ *> PyMem_Malloc(nnz * sizeof(@index|numpy_to_c@))
+        self.params.val = <@type|numpy_to_c@ *>  PyMem_Malloc(nnz * sizeof(@type|numpy_to_c@))
+ 
         if m < n:
             self.transp = 't' # True
         else:
@@ -163,54 +166,38 @@ cdef class Baseqr_mumpsContext_@index@_@type@:
 
 
     cdef get_data_pointers(self,
-                           int * a_row,
-                           int * a_col,
+                           @index|numpy_to_c@ * a_row,
+                           @index|numpy_to_c@ * a_col,
                            @type|numpy_to_c@ * a_val):
 
-        self.a_row = <int *> a_row
-        self.a_col = <int *> a_col
-        self.a_val = <@type|numpy_to_c@ *> a_val
-
         # transform c index arrays to fortran arrays
-        c_to_fortran_index_array(self.a_row, self.nnz)
-        c_to_fortran_index_array(self.a_col, self.nnz)
+        c_to_fortran_index_array(a_row, self.nnz)
+        c_to_fortran_index_array(a_col, self.nnz)
 
-        self.params.nz = <int> self.nnz
-
-        self.params.irn = <int *> self.a_row
-        self.params.jcn = <int *> self.a_col
-        self.params.val = <@type|numpy_to_c@ *> self.a_val
+        self.params.irn = <@index|numpy_to_c@ *> a_row
+        self.params.jcn = <@index|numpy_to_c@ *> a_col
+        self.params.val = <@type|numpy_to_c@ *>  a_val
 
 
     def __dealloc__(self):
         # autodestruct qr_mumps internal
+        # self.params.irn = NULL
+        # self.params.jcn = NULL
+        # self.params.val = NULL
         @type|numpy_to_qr_mumps_type@qrm_spmat_destroy_c(&self.params)
-        #free(qrm_mat.irn); free(qrm_mat.jcn); free(qrm_mat.val)
-        PyMem_Free(self.a_row)
-        PyMem_Free(self.a_col)
-        PyMem_Free(self.a_val)
+        PyMem_Free(self.params.irn)
+        PyMem_Free(self.params.jcn)
+        PyMem_Free(self.params.val)
 
     # Properties
     property analyzed:
         def __get__(self): return self.analyzed
     property factorized:
         def __get__(self): return self.factorized
-
     property m:
-        def __get__(self): return self.params.m
-        def __set__(self, value): self.params.m = value
+        def __get__(self): return self.nrow
     property n:
-        def __get__(self): return self.params.n
-        def __set__(self, value): self.params.n = value
-    property nz:
-        def __get__(self): return self.params.nz
-        def __set__(self, value): self.params.nz = value
-    property irn:
-        def __get__(self): return <long> self.params.irn
-        def __set__(self, long value): self.params.irn = <int*> value
-    property jcn:
-        def __get__(self): return <long> self.params.jcn
-        def __set__(self, long value): self.params.jcn = <int*> value
+        def __get__(self): return self.ncol
 
 
     def set_silent(self):
@@ -224,23 +211,12 @@ cdef class Baseqr_mumpsContext_@index@_@type@:
 
     def analyze(self, ordering='auto'):
         """
-        Performs analysis step of MUMPS.
+        Performs analysis step of QR_MUMPS.
 
-        In the analyis step, MUMPS is able to figure out a reordering for the 
-        given matrix. It does so if `ordering` is set to 'auto'.
-        If not MUMPS will use the provided ordering.
-        MUMPS statistics for the analysis are available in `analysis_stats`.
-
-        Args:
-            ordering : { 'auto', 'amd', 'amf', 'scotch', 'pord', 'metis', 'qamd' }
-                ordering to use in the factorization. The availability of a
-                particular ordering depends on the MUMPS installation.  Default is
-                'auto'.
+        TODO: ordering
         """
         if self.analyzed:
             return
-
-        print 'in analyze' 
 
         t1 = time.clock()
         @type|numpy_to_qr_mumps_type@qrm_analyse_c(&self.params, self.transp)
@@ -253,8 +229,7 @@ cdef class Baseqr_mumpsContext_@index@_@type@:
 
     def factorize(self, ordering='auto', pivot_tol=0.01):
         """
-        Perform the LU factorization of the matrix (or LDL' if the matrix
-        is symmetric).
+        Perform the QR factorization of the matrix A or A'.
 
         This factorization can then later be used to solve a linear system
         with `solve`. Statistical data of the factorization is stored in
@@ -280,42 +255,11 @@ cdef class Baseqr_mumpsContext_@index@_@type@:
         self.factorized = True
         # self.factorize_stats = FactorizationStatistics(self.params, t2 - t1)
 
-    cdef solve_dense(self, @type|numpy_to_c@ * rhs, @type|numpy_to_c@ * x, int nrhs):
-        """
-        Solve a linear system after the LU (or LDL^T) factorization has previously been performed by `factorize`
-
-        Args:
-            rhs: the right hand side (dense matrix or vector)
-            rhs_length: Length of each column of the ``rhs``.
-            nrhs: Number of columns in the matrix ``rhs``.
-
-        Warning:
-            MUMPS overwrites ``rhs`` and replaces it by the solution of the linear system.
-        """
-        @type|numpy_to_qr_mumps_type@qrm_apply_c(&self.params, 't', rhs, nrhs);
-        @type|numpy_to_qr_mumps_type@qrm_solve_c(&self.params, 'n', rhs, x, nrhs);
-
-    
-    cdef solve_dense_transp(self, @type|numpy_to_c@ * rhs, @type|numpy_to_c@ * x, int nrhs):
-        """
-        Solve a linear system after the QR (factorization has previously been performed by `factorize`)
-
-        Args:
-            rhs: the right hand side (dense matrix or vector)
-
-        Warning:
-            MUMPS overwrites ``rhs`` and replaces it by the solution of the linear system.
-        """
-        @type|numpy_to_qr_mumps_type@qrm_solve_c(&self.params, 't', rhs, x, nrhs);
-        @type|numpy_to_qr_mumps_type@qrm_apply_c(&self.params, 'n', x, nrhs);
- 
     def solve(self, rhs):
         """
 
         Args:
             rhs: dense NumPy array (matrix or vector).
-            rhs_col_ptr, rhs_row_ind, rhs_val: sparse NumPy CSC arrays (matrix or vector).
-            transpose_solve : ``True`` or ``False`` whether to solve A * x = rhs or A^T * x = rhs. Default is ``False``
 
         Returns:
             Dense NumPy array ``x`` (matrix or vector) with the solution(s) of the linear system.
@@ -336,104 +280,100 @@ cdef class Baseqr_mumpsContext_@index@_@type@:
         rhs_shape = rhs.shape
         if rhs.ndim==1:
             nrhs = 1 
+            x = np.zeros(self.ncol, dtype=np.@type|lower@) 
         elif rhs.ndim==2:
             nrhs = rhs_shape[1]
+            x = np.zeros([self.ncol, nrhs], order='F', dtype=np.@type|lower@)
         else:
             raise ValueError("Not implemented for 3 dimensional right-hand sides!")
 
+        # Check on right-hand side number of lines
+        if (rhs_shape[0] != self.nrow):
+            raise ValueError("Right hand side has wrong size.\n"
+                             "Attempting to solve the linear system, where A is of size (%d, %d) "
+                             "and rhs is of size (%d,%d)"%(self.nrow, self.ncol, rhs_shape[0], nrhs))
+
         if self.transp=='n':
-            if (rhs_shape[0] != self.nrow):
-                raise ValueError("Right hand side has wrong size"
-                                 "Attempting to solve the linear system, where A is of size (%d, %d) "
-                                 "and rhs is of size (%d,1)"%(self.nrow, self.ncol, rhs_shape[0]))
-            if nrhs==1:
-                x = np.zeros(self.ncol) 
-            else:
-                x = np.zeros([self.ncol, nrhs], order='F')
-            self.solve_dense(<@type|numpy_to_c@ *> cnp.PyArray_DATA(b), <@type|numpy_to_c@ *> cnp.PyArray_DATA(x), nrhs)
+            @type|numpy_to_qr_mumps_type@qrm_apply_c(&self.params, 't', <@type|numpy_to_c@ *> cnp.PyArray_DATA(b), nrhs);
+            @type|numpy_to_qr_mumps_type@qrm_solve_c(&self.params, 'n', <@type|numpy_to_c@ *> cnp.PyArray_DATA(b), <@type|numpy_to_c@ *> cnp.PyArray_DATA(x), nrhs);
         elif self.transp=='t':
-            if (rhs_shape[0] != self.ncol):
-                raise ValueError("Right hand side has wrong size"
-                                 "Attempting to solve the linear system, where A is of size (%d, %d) "
-                                 "and rhs is of size (%d,1)"%(self.nrow, self.ncol, rhs_shape[0]))
-            if nrhs==1:
-                x = np.zeros(self.nrow) 
-            else:
-                x = np.zeros([self.nrow, nrhs], order='F')
-            self.solve_dense_transp(<@type|numpy_to_c@ *> cnp.PyArray_DATA(b), <@type|numpy_to_c@ *> cnp.PyArray_DATA(x), nrhs)
+            @type|numpy_to_qr_mumps_type@qrm_solve_c(&self.params, 't', <@type|numpy_to_c@ *> cnp.PyArray_DATA(b), <@type|numpy_to_c@ *> cnp.PyArray_DATA(x), nrhs);
+            @type|numpy_to_qr_mumps_type@qrm_apply_c(&self.params, 'n', <@type|numpy_to_c@ *> cnp.PyArray_DATA(x), nrhs);
         return x
 
 
     def least_squares(self, rhs):
+        if self.m < self.n:
+            raise RuntimeError("least_squares method can only be called for matrix A with more lines than columns")
+
         b = np.asfortranarray(rhs.copy())
 
         # test number of columns in rhs
         rhs_shape = rhs.shape
         if rhs.ndim==1:
             nrhs = 1 
+            x = np.zeros(self.ncol, dtype=np.@type|lower@) 
         elif rhs.ndim==2:
             nrhs = rhs_shape[1]
+            x = np.zeros([self.ncol, nrhs], order='F', dtype=np.@type|lower@)
         else:
             raise ValueError("Not implemented for 3 dimensional right-hand sides!")
 
+        # Check on right-hand side number of lines
         if (rhs_shape[0] != self.nrow):
-            raise ValueError("Right hand side has wrong size"
+            raise ValueError("Right hand side has wrong size.\n"
                              "Attempting to solve the linear system, where A is of size (%d, %d) "
-                             "and rhs is of size (%d,1)"%(self.nrow, self.ncol, rhs_shape[0]))
-        if nrhs==1:
-            x = np.zeros(self.ncol) 
-        else:
-            x = np.zeros([self.ncol, nrhs], order='F')
-       
+                             "and rhs is of size (%d,%d)"%(self.nrow, self.ncol, rhs_shape[0], nrhs))
+
         @type|numpy_to_qr_mumps_type@qrm_least_squares_c(&self.params, <@type|numpy_to_c@ *> cnp.PyArray_DATA(b), <@type|numpy_to_c@ *> cnp.PyArray_DATA(x), nrhs)
         return x
 
     def minimum_norm(self, rhs):
+        if self.m >= self.n:
+            raise RuntimeError("minimum_norm method can only be called for matrix A with more columns than lines")
+
         b = np.asfortranarray(rhs.copy())
 
         # test number of columns in rhs
         rhs_shape = rhs.shape
         if rhs.ndim==1:
             nrhs = 1 
+            x = np.zeros(self.ncol, dtype=np.@type|lower@) 
         elif rhs.ndim==2:
             nrhs = rhs_shape[1]
+            x = np.zeros([self.ncol, nrhs], order='F', dtype=np.@type|lower@)
         else:
             raise ValueError("Not implemented for 3 dimensional right-hand sides!")
 
+        # Check on right-hand side number of lines
         if (rhs_shape[0] != self.nrow):
-            raise ValueError("Right hand side has wrong size"
+            raise ValueError("Right hand side has wrong size.\n"
                              "Attempting to solve the linear system, where A is of size (%d, %d) "
                              "and rhs is of size (%d,%d)"%(self.nrow, self.ncol, rhs_shape[0], nrhs))
-        if nrhs==1:
-            x = np.zeros(self.ncol) 
-        else:
-            x = np.zeros([self.ncol, nrhs], order='F')
-       
+
         @type|numpy_to_qr_mumps_type@qrm_min_norm_c(&self.params, <@type|numpy_to_c@ *> cnp.PyArray_DATA(b), <@type|numpy_to_c@ *> cnp.PyArray_DATA(x), nrhs)
         return x
 
 
-cpdef Numpyqr_mumpsContext_@index@_@type@(int m, int n,
-                                       cnp.ndarray[int] a_row,
-                                       cnp.ndarray[int] a_col,
-                                       cnp.ndarray[@type|numpy_to_c@] a_val,
-                                       verbose=False):
+cpdef NumpyQRMUMPSSolver_@index@_@type@(@index|numpy_to_c@ m, @index|numpy_to_c@ n,
+                                        cnp.ndarray[@index|numpy_to_c@] a_row,
+                                        cnp.ndarray[@index|numpy_to_c@] a_col,
+                                        cnp.ndarray[@type|numpy_to_c@] a_val,
+                                        verbose=False):
 
     """
-    MUMPS Context.
+    QR_MUMPS solver when matrix A is supplied in coordinate format through Numpy arrays.
 
-    We follow the common use of MUMPS. In particular, we use the same names for the methods of this
-    class as their corresponding counter-parts in MUMPS.
     Args:
-        n: size of matrix A
+        m: number of lines of matrix A
+        n: number of columns of matrix A
         a_row: row indices of non zero elements of A
         a_col: column indices of non zero elements of A
         a_val: values of non zeros elements of A
-        sym:   a boolean indicating if A is a symmetric matrix or not
         verbose: a boolean to turn on or off the verbosity of MUMPS
 
-    Warning: if the numpy arrays are modified externally by the user between 2 calls to solve,
-    the changes in arrays won't be passed to MUMPS.
+    Warning: if the numpy arrays are modified externally by the user between
+    two calls to solve, the changes in arrays won't be passed to QR_MUMPS.
     """
     nrow = m
     ncol = n
@@ -443,16 +383,8 @@ cpdef Numpyqr_mumpsContext_@index@_@type@(int m, int n,
     Py_INCREF(a_col)
     Py_INCREF(a_val)
 
-    arow = <int *> PyMem_Malloc(nnz * sizeof(int))
-    acol = <int *> PyMem_Malloc(nnz * sizeof(int))
-    aval = <@type|numpy_to_c@ *> PyMem_Malloc(nnz * sizeof(@type|numpy_to_c@))
-       
-    arow = <int *> cnp.PyArray_DATA(a_row)
-    acol = <int *> cnp.PyArray_DATA(a_col)
-    aval = <@type|numpy_to_c@ *> cnp.PyArray_DATA(a_val)
+    solver = BaseQRMUMPSSolver_@index@_@type@(m, n, nnz, verbose)
+    solver.get_data_pointers(<@index|numpy_to_c@ *> cnp.PyArray_DATA(a_row), <@index|numpy_to_c@ *> cnp.PyArray_DATA(a_col), <@type|numpy_to_c@ *> cnp.PyArray_DATA(a_val))
 
-    context = Baseqr_mumpsContext_@index@_@type@(m, n, nnz, verbose)
-    context.get_data_pointers(arow, acol, aval)
-
-    return context
+    return solver
 
