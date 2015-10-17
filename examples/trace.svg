@@ -1,0 +1,12 @@
+<svg>
+<rect style="fill:#8dd35f;stroke:#000000;stroke-width:0;fill-opacity:1" height=" 20.0" width="     21.21" y="    640.00" x="      0.07" />
+<rect style="fill:#d38d5f;stroke:#000000;stroke-width:0;fill-opacity:1" height=" 20.0" width="     23.50" y="    640.00" x="     21.31" />
+<rect style="fill:#ffdd55;stroke:#000000;stroke-width:0;fill-opacity:1" height=" 20.0" width="      3.12" y="    640.00" x="     44.82" />
+<rect style="fill:#d38d5f;stroke:#000000;stroke-width:0;fill-opacity:1" height=" 20.0" width="      0.07" y="    640.00" x="     47.98" />
+<rect style="fill:#e580ff;stroke:#000000;stroke-width:0;fill-opacity:1" height=" 20.0" width="      0.96" y="    640.00" x="     48.06" />
+<text x="0" y="    700.00" font-size=" 20" fill="#d38d5f">Panel                -- 48.2%</text>
+<text x="0" y="    720.00" font-size=" 20" fill="#ffdd55">Update               --  6.4%</text>
+<text x="0" y="    740.00" font-size=" 20" fill="#8dd35f">Activate             -- 43.4%</text>
+<text x="0" y="    760.00" font-size=" 20" fill="#80b3ff">Assemble             --  0.0%</text>
+<text x="0" y="    780.00" font-size=" 20" fill="#e580ff">Clean                --  2.0%</text>
+</svg>

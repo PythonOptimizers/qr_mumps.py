@@ -73,16 +73,23 @@ context_ext_params = copy.deepcopy(ext_params)
 qr_mumps_ext = []
 {% for index_type in index_list %}
   {% for element_type in type_list %}
-qr_mumps_ext_params_@index_type@_@element_type@ = copy.deepcopy(ext_params)
-qr_mumps_ext_params_@index_type@_@element_type@['include_dirs'].extend(qr_mumps_include_dirs)
-qr_mumps_ext_params_@index_type@_@element_type@['library_dirs'] = qr_mumps_library_dirs
-qr_mumps_ext_params_@index_type@_@element_type@['libraries'] = [] # 'scalapack', 'pord']
-qr_mumps_ext_params_@index_type@_@element_type@['libraries'].append('@element_type|numpy_to_qr_mumps_type@qrm')
-qr_mumps_ext_params_@index_type@_@element_type@['libraries'].append('qrm_common')
+base_ext_params_@index_type@_@element_type@ = copy.deepcopy(ext_params)
+base_ext_params_@index_type@_@element_type@['include_dirs'].extend(qr_mumps_include_dirs)
+base_ext_params_@index_type@_@element_type@['library_dirs'] = qr_mumps_library_dirs
+base_ext_params_@index_type@_@element_type@['libraries'] = [] # 'scalapack', 'pord']
+base_ext_params_@index_type@_@element_type@['libraries'].append('@element_type|numpy_to_qr_mumps_type@qrm')
+base_ext_params_@index_type@_@element_type@['libraries'].append('qrm_common')
 qr_mumps_ext.append(Extension(name="qr_mumps.src.qr_mumps_@index_type@_@element_type@",
-                 sources=['qr_mumps/src/qr_mumps_@index_type@_@element_type@.pxd',
-                 'qr_mumps/src/qr_mumps_@index_type@_@element_type@.pyx'],
-                 **qr_mumps_ext_params_@index_type@_@element_type@))
+                sources=['qr_mumps/src/qr_mumps_@index_type@_@element_type@.pxd',
+                'qr_mumps/src/qr_mumps_@index_type@_@element_type@.pyx'],
+                **base_ext_params_@index_type@_@element_type@))
+
+numpy_ext_params_@index_type@_@element_type@ = copy.deepcopy(ext_params)
+numpy_ext_params_@index_type@_@element_type@['include_dirs'].extend(qr_mumps_include_dirs)
+qr_mumps_ext.append(Extension(name="qr_mumps.src.numpy_qr_mumps_@index_type@_@element_type@",
+                 sources=['qr_mumps/src/numpy_qr_mumps_@index_type@_@element_type@.pxd',
+                 'qr_mumps/src/numpy_qr_mumps_@index_type@_@element_type@.pyx'],
+                 **numpy_ext_params_@index_type@_@element_type@))
 
   {% endfor %}
 {% endfor %}

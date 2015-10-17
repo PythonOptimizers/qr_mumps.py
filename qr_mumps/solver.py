@@ -3,10 +3,10 @@ Factory method to access qr_mumps.
 """
 import numpy as np
 
-from qr_mumps.src.qr_mumps_INT32_FLOAT32 import NumpyQRMUMPSSolver_INT32_FLOAT32
-from qr_mumps.src.qr_mumps_INT32_FLOAT64 import NumpyQRMUMPSSolver_INT32_FLOAT64
-from qr_mumps.src.qr_mumps_INT32_COMPLEX64 import NumpyQRMUMPSSolver_INT32_COMPLEX64
-from qr_mumps.src.qr_mumps_INT32_COMPLEX128 import NumpyQRMUMPSSolver_INT32_COMPLEX128
+from qr_mumps.src.numpy_qr_mumps_INT32_FLOAT32 import NumpyQRMUMPSSolver_INT32_FLOAT32
+from qr_mumps.src.numpy_qr_mumps_INT32_FLOAT64 import NumpyQRMUMPSSolver_INT32_FLOAT64
+from qr_mumps.src.numpy_qr_mumps_INT32_COMPLEX64 import NumpyQRMUMPSSolver_INT32_COMPLEX64
+from qr_mumps.src.numpy_qr_mumps_INT32_COMPLEX128 import NumpyQRMUMPSSolver_INT32_COMPLEX128
 
 cysparse_installed = False
 try:

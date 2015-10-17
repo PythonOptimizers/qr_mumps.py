@@ -5,7 +5,7 @@ import numpy as np
 
 {% for index_type in index_list %}
     {% for element_type in type_list %}
-from qr_mumps.src.qr_mumps_@index_type@_@element_type@ import NumpyQRMUMPSSolver_@index_type@_@element_type@
+from qr_mumps.src.numpy_qr_mumps_@index_type@_@element_type@ import NumpyQRMUMPSSolver_@index_type@_@element_type@
     {% endfor %}
 {% endfor %}
 

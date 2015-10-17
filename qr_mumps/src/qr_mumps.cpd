@@ -1,4 +1,5 @@
 cimport numpy as cnp
+
 cdef extern from "@type|numpy_to_qr_mumps_type@qrm_mumps.h":
     cdef struct @type|numpy_to_qr_mumps_type@qrm_spmat_type_c:
         int          *irn
