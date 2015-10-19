@@ -255,14 +255,17 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         self.factorized = True
         # self.factorize_stats = FactorizationStatistics(self.params, t2 - t1)
 
-    def solve(self, rhs):
+    def solve(self, rhs, compute_residuals=False):
         """
 
         Args:
             rhs: dense NumPy array (matrix or vector).
+            compute_residuals: boolean to compute the scaled norm of the residual (i.e. the normwise backward error).
 
         Returns:
-            Dense NumPy array ``x`` (matrix or vector) with the solution(s) of the linear system.
+            Dense NumPy array ``x`` (matrix or vector) with the solution(s) of the linear system
+            or
+            a tuple containing the solutions of the linear system and the scaled norm of the residual.
 
 
         Warning: eventough it is written in qr_mumps doc that it is possible to solve the system for multiple
@@ -299,7 +302,20 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         elif self.transp=='t':
             @type|numpy_to_qr_mumps_type@qrm_solve_c(&self.params, 't', <@type|numpy_to_c@ *> cnp.PyArray_DATA(b), <@type|numpy_to_c@ *> cnp.PyArray_DATA(x), nrhs);
             @type|numpy_to_qr_mumps_type@qrm_apply_c(&self.params, 'n', <@type|numpy_to_c@ *> cnp.PyArray_DATA(x), nrhs);
-        return x
+
+
+        # compute residuals if requested
+        if compute_residuals:
+            residuals = np.asfortranarray(rhs.copy())
+            residual_norm = np.zeros(nrhs, dtype=np.@type|numpy_to_single_double@)
+            @type|numpy_to_qr_mumps_type@qrm_residual_norm_c(&self.params,
+                                                             <@type|numpy_to_c@ *> cnp.PyArray_DATA(residuals),
+                                                             <@type|numpy_to_c@ *> cnp.PyArray_DATA(x),
+                                                             nrhs,
+                                                             <@type|numpy_to_c_single_double@ *>cnp.PyArray_DATA(residual_norm))
+            return (x, residuals, residual_norm)
+        else:
+            return x
 
 
     def least_squares(self, rhs):
@@ -353,6 +369,62 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
 
         @type|numpy_to_qr_mumps_type@qrm_min_norm_c(&self.params, <@type|numpy_to_c@ *> cnp.PyArray_DATA(b), <@type|numpy_to_c@ *> cnp.PyArray_DATA(x), nrhs)
         return x
+
+
+    cpdef cnp.ndarray[cnp.@type|lower@_t] refine(self, cnp.ndarray[cnp.@type|lower@_t] x, cnp.ndarray[cnp.@type|lower@_t] rhs, @index|numpy_to_c@ niter):
+        """
+        Let x be the initial solution of Ax = b
+        Compute residual r = b - Ax
+        for i = 1 to t do
+            Solve A Dx = r using the computed factorization
+            x = x + Dx
+            r = b - Ax
+        end for
+        """
+        
+        cdef int i
+
+#TODO: test if factorise has been called
+
+        residuals = np.asfortranarray(rhs.copy())
+        new_x =  np.asfortranarray(x.copy())
+
+        # test number of columns in rhs
+        rhs_shape = rhs.shape
+        if rhs.ndim==1:
+            nrhs = 1 
+        elif rhs.ndim==2:
+            nrhs = rhs_shape[1]
+        else:
+            raise ValueError("Not implemented for 3 dimensional right-hand sides!")
+                        
+        x_shape = x.shape
+        if x.ndim==1:
+            nx = 1 
+        elif x.ndim==2:
+            nx = x_shape[1]
+ 
+        assert(nx, nrhs)
+
+        for i in xrange(0,niter):
+            @type|numpy_to_qr_mumps_type@qrm_matmul_c(&self.params, 'n', <@type|numpy_to_c_single_double@> -1,
+                                                      <@type|numpy_to_c@ *> cnp.PyArray_DATA(new_x), 
+                                                      <@type|numpy_to_c_single_double@> 1,
+                                                      <@type|numpy_to_c@ *> cnp.PyArray_DATA(residuals),
+                                                      nrhs)
+
+            if self.transp=='n':
+                @type|numpy_to_qr_mumps_type@qrm_apply_c(&self.params, 't', <@type|numpy_to_c@ *> cnp.PyArray_DATA(residuals), nrhs);
+                @type|numpy_to_qr_mumps_type@qrm_solve_c(&self.params, 'n', <@type|numpy_to_c@ *> cnp.PyArray_DATA(residuals), <@type|numpy_to_c@ *> cnp.PyArray_DATA(new_x), nrhs);
+            elif self.transp=='t':
+                @type|numpy_to_qr_mumps_type@qrm_solve_c(&self.params, 't', <@type|numpy_to_c@ *> cnp.PyArray_DATA(residuals), <@type|numpy_to_c@ *> cnp.PyArray_DATA(new_x), nrhs);
+                @type|numpy_to_qr_mumps_type@qrm_apply_c(&self.params, 'n', <@type|numpy_to_c@ *> cnp.PyArray_DATA(new_x), nrhs);
+
+            new_x = x + new_x
+            x = new_x.copy()
+       
+        return new_x
+
 
 
 cpdef NumpyQRMUMPSSolver_@index@_@type@(@index|numpy_to_c@ m, @index|numpy_to_c@ n,

@@ -109,3 +109,4 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
                            @index|numpy_to_c@ * a_col,
                            @type|numpy_to_c@ * a_val)
 
+    cpdef cnp.ndarray[cnp.@type|lower@_t] refine(self, cnp.ndarray[cnp.@type|lower@_t] x, cnp.ndarray[cnp.@type|lower@_t] rhs, @index|numpy_to_c@ niter)
