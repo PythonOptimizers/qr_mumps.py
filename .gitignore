@@ -14,6 +14,8 @@ __pycache__/
 setup.py
 qr_mumps/qr_mumps_context.py
 *.c
+# QR_MUMPS related
+trace.svg
 
 # Distribution / packaging
 .Python

@@ -6,11 +6,7 @@ from cpython cimport Py_INCREF, Py_DECREF
 cimport numpy as cnp
 cnp.import_array()
 
-cpdef NumpyQRMUMPSSolver_@index@_@type@(@index|numpy_to_c@ m, @index|numpy_to_c@ n,
-                                        cnp.ndarray[@index|numpy_to_c@] a_row,
-                                        cnp.ndarray[@index|numpy_to_c@] a_col,
-                                        cnp.ndarray[@type|numpy_to_c@] a_val,
-                                        verbose=False):
+def NumpyQRMUMPSSolver_@index@_@type@(m, n, a_row, a_col, a_val, verbose=False):
 
     """
     QR_MUMPS solver when matrix A is supplied in coordinate format through Numpy arrays.
@@ -33,9 +29,9 @@ cpdef NumpyQRMUMPSSolver_@index@_@type@(@index|numpy_to_c@ m, @index|numpy_to_c@
     assert(a_row.size, nnz)
     assert(a_col.size, nnz)
 
-# Py_INCREF(a_row)
-#    Py_INCREF(a_col)
-#    Py_INCREF(a_val)
+    Py_INCREF(a_row)
+    Py_INCREF(a_col)
+    Py_INCREF(a_val)
 
     # create i, j, val
     # arow = <@index|numpy_to_c@ *> PyMem_Malloc(nnz * sizeof(@index|numpy_to_c@))

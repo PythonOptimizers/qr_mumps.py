@@ -186,11 +186,11 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         # self.params.val = NULL
         @type|numpy_to_qr_mumps_type@qrm_spmat_destroy_c(&self.params)
 # if self.params.irn is not NULL:
-#    PyMem_Free(self.params.irn)
+        PyMem_Free(self.params.irn)
 #if self.params.jcn is not NULL:
-#    PyMem_Free(self.params.jcn)
+        PyMem_Free(self.params.jcn)
 #if self.params.val is not NULL:
-#    PyMem_Free(self.params.val)
+        PyMem_Free(self.params.val)
 
     # Properties
     property analyzed:
