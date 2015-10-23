@@ -179,9 +179,6 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
     def __dealloc__(self):
         # autodestruct qr_mumps internal
         @type|numpy_to_qr_mumps_type@qrm_spmat_destroy_c(&self.params)
-# if self.params.irn is not NULL:
-#if self.params.jcn is not NULL:
-#if self.params.val is not NULL:
 
     # Properties
     property analyzed:
@@ -346,6 +343,4 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
 
         @type|numpy_to_qr_mumps_type@qrm_min_norm_c(&self.params, <@type|numpy_to_c@ *> cnp.PyArray_DATA(b), <@type|numpy_to_c@ *> cnp.PyArray_DATA(x), nrhs)
         return x
-
-
 
