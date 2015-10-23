@@ -147,9 +147,6 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         self.params.m = self.nrow
         self.params.n = self.ncol
         self.params.nz = self.nnz
-#self.params.irn = <@index|numpy_to_c@ *> PyMem_Malloc(nnz * sizeof(@index|numpy_to_c@))
-#        self.params.jcn = <@index|numpy_to_c@ *> PyMem_Malloc(nnz * sizeof(@index|numpy_to_c@))
-#        self.params.val = <@type|numpy_to_c@ *>  PyMem_Malloc(nnz * sizeof(@type|numpy_to_c@))
  
         if m < n:
             self.transp = 't' # True
@@ -181,13 +178,7 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
 
     def __dealloc__(self):
         # autodestruct qr_mumps internal
-        # self.params.irn = NULL
-        # self.params.jcn = NULL
-        # self.params.val = NULL
         @type|numpy_to_qr_mumps_type@qrm_spmat_destroy_c(&self.params)
-#        PyMem_Free(self.params.irn)
-#        PyMem_Free(self.params.jcn)
-#        PyMem_Free(self.params.val)
 
     # Properties
     property analyzed:
