@@ -147,9 +147,9 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         self.params.m = self.nrow
         self.params.n = self.ncol
         self.params.nz = self.nnz
-        self.params.irn = <@index|numpy_to_c@ *> PyMem_Malloc(nnz * sizeof(@index|numpy_to_c@))
-        self.params.jcn = <@index|numpy_to_c@ *> PyMem_Malloc(nnz * sizeof(@index|numpy_to_c@))
-        self.params.val = <@type|numpy_to_c@ *>  PyMem_Malloc(nnz * sizeof(@type|numpy_to_c@))
+#self.params.irn = <@index|numpy_to_c@ *> PyMem_Malloc(nnz * sizeof(@index|numpy_to_c@))
+#        self.params.jcn = <@index|numpy_to_c@ *> PyMem_Malloc(nnz * sizeof(@index|numpy_to_c@))
+#        self.params.val = <@type|numpy_to_c@ *>  PyMem_Malloc(nnz * sizeof(@type|numpy_to_c@))
  
         if m < n:
             self.transp = 't' # True
@@ -185,9 +185,9 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         # self.params.jcn = NULL
         # self.params.val = NULL
         @type|numpy_to_qr_mumps_type@qrm_spmat_destroy_c(&self.params)
-        PyMem_Free(self.params.irn)
-        PyMem_Free(self.params.jcn)
-        PyMem_Free(self.params.val)
+#        PyMem_Free(self.params.irn)
+#        PyMem_Free(self.params.jcn)
+#        PyMem_Free(self.params.val)
 
     # Properties
     property analyzed:
@@ -379,10 +379,6 @@ cpdef NumpyQRMUMPSSolver_@index@_@type@(@index|numpy_to_c@ m, @index|numpy_to_c@
     ncol = n
     nnz = a_val.size
     
-    Py_INCREF(a_row)
-    Py_INCREF(a_col)
-    Py_INCREF(a_val)
-
     solver = BaseQRMUMPSSolver_@index@_@type@(m, n, nnz, verbose)
     solver.get_data_pointers(<@index|numpy_to_c@ *> cnp.PyArray_DATA(a_row), <@index|numpy_to_c@ *> cnp.PyArray_DATA(a_col), <@type|numpy_to_c@ *> cnp.PyArray_DATA(a_val))
 
