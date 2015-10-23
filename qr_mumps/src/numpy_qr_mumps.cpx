@@ -1,0 +1,51 @@
+from qr_mumps.src.qr_mumps_@index@_@type@ cimport BaseQRMUMPSSolver_@index@_@type@, c_to_fortran_index_array
+
+from cpython.mem cimport PyMem_Malloc, PyMem_Realloc, PyMem_Free
+from cpython cimport Py_INCREF, Py_DECREF
+
+cimport numpy as cnp
+cnp.import_array()
+
+def NumpyQRMUMPSSolver_@index@_@type@(m, n, a_row, a_col, a_val, verbose=False):
+
+    """
+    QR_MUMPS solver when matrix A is supplied in coordinate format through Numpy arrays.
+
+    Args:
+        m: number of lines of matrix A
+        n: number of columns of matrix A
+        a_row: row indices of non zero elements of A
+        a_col: column indices of non zero elements of A
+        a_val: values of non zeros elements of A
+        verbose: a boolean to turn on or off the verbosity of MUMPS
+
+    Warning: if the numpy arrays are modified externally by the user between
+    two calls to solve, the changes in arrays won't be passed to QR_MUMPS.
+    """
+    nrow = m
+    ncol = n
+    nnz = a_val.size
+
+    assert(a_row.size, nnz)
+    assert(a_col.size, nnz)
+
+    Py_INCREF(a_row)
+    Py_INCREF(a_col)
+    Py_INCREF(a_val)
+
+    # create i, j, val
+    # arow = <@index|numpy_to_c@ *> PyMem_Malloc(nnz * sizeof(@index|numpy_to_c@))
+    # acol = <@index|numpy_to_c@ *> PyMem_Malloc(nnz * sizeof(@index|numpy_to_c@))
+    # aval = <@type|numpy_to_c@ *> PyMem_Malloc(nnz * sizeof(@type|numpy_to_c@))
+
+    # arow = <@index|numpy_to_c@ *> cnp.PyArray_DATA(a_row)
+    # acol = <@index|numpy_to_c@ *> cnp.PyArray_DATA(a_col)
+    # aval = <@type|numpy_to_c@ *> cnp.PyArray_DATA(a_val)
+
+    solver = BaseQRMUMPSSolver_@index@_@type@(m, n, nnz, verbose)
+    solver.get_data_pointers(<@index|numpy_to_c@ *> cnp.PyArray_DATA(a_row),
+                             <@index|numpy_to_c@ *> cnp.PyArray_DATA(a_col),
+                             <@type|numpy_to_c@ *> cnp.PyArray_DATA(a_val))
+
+    return solver
+

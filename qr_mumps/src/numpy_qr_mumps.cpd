@@ -1,0 +1,4 @@
+from qr_mumps.src.qr_mumps_@index@_@type@ cimport BaseQRMUMPSSolver_@index@_@type@
+
+cimport numpy as cnp
+

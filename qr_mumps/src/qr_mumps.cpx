@@ -179,6 +179,9 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
     def __dealloc__(self):
         # autodestruct qr_mumps internal
         @type|numpy_to_qr_mumps_type@qrm_spmat_destroy_c(&self.params)
+# if self.params.irn is not NULL:
+#if self.params.jcn is not NULL:
+#if self.params.val is not NULL:
 
     # Properties
     property analyzed:
@@ -254,7 +257,6 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
 
         Returns:
             Dense NumPy array ``x`` (matrix or vector) with the solution(s) of the linear system.
-
 
         Warning: eventough it is written in qr_mumps doc that it is possible to solve the system for multiple
         right-hand-side, I can't make it work!
@@ -346,32 +348,4 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         return x
 
 
-cpdef NumpyQRMUMPSSolver_@index@_@type@(@index|numpy_to_c@ m, @index|numpy_to_c@ n,
-                                        cnp.ndarray[@index|numpy_to_c@] a_row,
-                                        cnp.ndarray[@index|numpy_to_c@] a_col,
-                                        cnp.ndarray[@type|numpy_to_c@] a_val,
-                                        verbose=False):
-
-    """
-    QR_MUMPS solver when matrix A is supplied in coordinate format through Numpy arrays.
-
-    Args:
-        m: number of lines of matrix A
-        n: number of columns of matrix A
-        a_row: row indices of non zero elements of A
-        a_col: column indices of non zero elements of A
-        a_val: values of non zeros elements of A
-        verbose: a boolean to turn on or off the verbosity of MUMPS
-
-    Warning: if the numpy arrays are modified externally by the user between
-    two calls to solve, the changes in arrays won't be passed to QR_MUMPS.
-    """
-    nrow = m
-    ncol = n
-    nnz = a_val.size
-    
-    solver = BaseQRMUMPSSolver_@index@_@type@(m, n, nnz, verbose)
-    solver.get_data_pointers(<@index|numpy_to_c@ *> cnp.PyArray_DATA(a_row), <@index|numpy_to_c@ *> cnp.PyArray_DATA(a_col), <@type|numpy_to_c@ *> cnp.PyArray_DATA(a_val))
-
-    return solver
 

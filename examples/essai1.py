@@ -16,7 +16,7 @@ for i in xrange(0,100):
     print i
 
 solver.analyze()
-print solver.analyzed
+# print solver.analyzed
 
 solver.factorize()
 
