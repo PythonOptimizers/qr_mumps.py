@@ -38,7 +38,6 @@ cpdef CySparseQRMUMPSSolver_@index@_@type@(LLSparseMatrix_@index@_t_@type@_t A, 
 
     """
 
-    Py_INCREF(A)  # increase ref to object to avoid the user deleting it explicitly or implicitly
     m = A.nrow
     n = A.ncol
     nnz = A.nnz
