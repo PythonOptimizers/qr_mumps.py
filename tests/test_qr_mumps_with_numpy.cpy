@@ -23,36 +23,36 @@ class NumpyQRMUMPSSolverTestCaseMoreLinesThanColumns_@index_type@_@element_type@
         self.aval = np.array([0.7,0.6,0.4,0.1,0.1,0.3,0.6,0.7,0.2,0.5,0.2,0.1,0.6], dtype=np.@element_type|lower@)
 
     def test_init(self):
-        solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
-        assert_equal(self.n, solver.n)
+        solver1 = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
+        assert_equal(self.n, solver1.n)
 
     def test_analyze(self):
-        solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
-        solver.analyze()
-        assert(solver.analyzed==True)
+        solver2 = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
+        solver2.analyze()
+        assert(solver2.analyzed==True)
 
     def test_factorize(self):
-        solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
-        solver.factorize()
-        assert(solver.analyzed==True)
-        assert(solver.factorized==True)
+        solver3 = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
+        solver3.factorize()
+        assert(solver3.analyzed==True)
+        assert(solver3.factorized==True)
 
     def test_dense_solve_single_rhs(self):
-        solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
-        solver.factorize()
+        solver4 = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
+        solver4.factorize()
         e = np.ones(self.n, dtype=np.@element_type|lower@)
         rhs = np.dot(self.A, e)
-        x = solver.solve(rhs)
+        x = solver4.solve(rhs)
         assert_almost_equal(x, e, 5)
 
     def test_dense_solve_multiple_rhs(self):
-        solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
-        solver.factorize()
+        solver5 = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
+        solver5.factorize()
         B = np.ones([self.n, 3], dtype=np.@element_type|lower@)
         B[: ,1] = 2 * B[:,1]
         B[: ,2] = 3 * B[:,2]
         rhs = np.dot(self.A,B)
-        x = solver.solve(rhs)
+        x = solver5.solve(rhs)
         assert_almost_equal(x, B, 5)
 
 
@@ -66,37 +66,37 @@ class NumpyQRMUMPSSolverTestCaseMoreColumnsThanLines_@index_type@_@element_type@
         self.aval = np.array([0.7,0.6,0.4,0.1,0.1,0.3,0.6,0.7,0.2,0.5,0.2,0.1,0.6], dtype=np.@element_type|lower@)
 
     def test_init(self):
-        solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
-        assert_equal(self.n, solver.n)
-        assert_equal(self.m, solver.m)
+        solver1 = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
+        assert_equal(self.n, solver1.n)
+        assert_equal(self.m, solver1.m)
 
     def test_analyze(self):
-        solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
-        solver.analyze()
-        assert(solver.analyzed==True)
+        solver2 = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
+        solver2.analyze()
+        assert(solver2.analyzed==True)
 
     def test_factorize(self):
-        solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
-        solver.factorize()
-        assert(solver.analyzed==True)
-        assert(solver.factorized==True)
+        solver3 = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
+        solver3.factorize()
+        assert(solver3.analyzed==True)
+        assert(solver3.factorized==True)
 
     def test_dense_solve_single_rhs(self):
-        solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
-        solver.factorize()
+        solver4 = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
+        solver4.factorize()
         e = np.ones(self.n, dtype=np.@element_type|lower@)
         rhs = np.dot(self.A, e)
-        x = solver.solve(rhs)
+        x = solver4.solve(rhs)
         assert_almost_equal(np.dot(self.A,x), rhs, 5)
 
     def test_dense_solve_multiple_rhs(self):
-        solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
-        solver.factorize()
+        solver5 = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
+        solver5.factorize()
         B = np.ones([self.n, 3], dtype=np.@element_type|lower@)
         B[: ,1] = 2 * B[:,1]
         B[: ,2] = 3 * B[:,2]
         rhs = np.dot(self.A,B)
-        x = solver.solve(rhs)
+        x = solver5.solve(rhs)
         print x
         assert_almost_equal(np.dot(self.A,x), rhs, 5)
 
