@@ -11,7 +11,7 @@ acol = np.array([1,2,5,0,5,1,3,4,6,1,2,1,3], dtype=np.int32)
 aval = np.array([0.7,0.6,0.4,0.1,0.1,0.3,0.6,0.7,0.2,0.5,0.2,0.1,0.6], dtype=np.float64)
 print A
 
-for i in xrange(0,100):
+for i in xrange(0,1):
     solver = QRMUMPSSolver((m, n, arow, acol, aval), verbose=False)
     print i
 
@@ -20,25 +20,29 @@ solver.analyze()
 
 solver.factorize()
 
-#e = np.ones(m, dtype=np.float64)
-#rhs = np.dot(A.T, e)
+e = np.ones(n, dtype=np.float64)
+rhs = np.dot(A, e)
 
-#x = context.solve(rhs)
+
+x = solver.solve(rhs)
 #np.testing.assert_almost_equal(x,e)
-#print rhs, x
-
+print e, x
+print np.dot(A, x), rhs
 
 print "= " * 80
 
-B = np.ones([n, 1], dtype=np.float64)
-#B[: ,1] = 2 * B[:,1]
-#B[: ,2] = 3 * B[:,2]
+B = np.ones([n, 3], dtype=np.float64)
+B[: ,1] = 2 * B[:,1]
+B[: ,2] = 3 * B[:,2]
 rhs = np.dot(A,B)
 
+
+print "-"*80
 x = solver.solve(rhs)
-print rhs
 print x
-np.testing.assert_almost_equal(np.dot(A,x), rhs)
+print np.dot(A, x)
+print rhs
+#np.testing.assert_almost_equal(np.dot(A,x), rhs)
 
 #print "= " * 80
 
@@ -47,7 +51,12 @@ np.testing.assert_almost_equal(np.dot(A,x), rhs)
 #B[: ,2] = 3 * B[:,2]
 #rhs = np.dot(A,B)
 
-# x = solver.least_squares(rhs)
+#x = solver.least_squares(rhs)
+#print x
+#print "-"*80
+#print np.dot(A, x)
+#print rhs
+
 #print rhs
 #print x
 #np.testing.assert_almost_equal(x,B)
@@ -60,9 +69,10 @@ np.testing.assert_almost_equal(np.dot(A,x), rhs)
 #B[: ,2] = 3 * B[:,2]
 #rhs = np.dot(A,B)
 
-#x = solver.minimum_norm(rhs)
-#print rhs
-#print x
-#print np.dot(A, x)
-#np.testing.assert_almost_equal(np.dot(A, x), rhs)
+print "-"*80
+x = solver.minimum_norm(rhs)
+print rhs
+print x
+print np.dot(A, x)
+# np.testing.assert_almost_equal(np.dot(A, x), rhs)
 

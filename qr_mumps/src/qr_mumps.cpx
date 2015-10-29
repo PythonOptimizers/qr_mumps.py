@@ -248,7 +248,6 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
 
     def solve(self, rhs):
         """
-
         Args:
             rhs: dense NumPy array (matrix or vector).
 
