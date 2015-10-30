@@ -1,6 +1,8 @@
 from qr_mumps.solver import QRMUMPSSolver
+
 import numpy as np
 import sys
+import sys, traceback
 
 m = 5
 n = 7
@@ -11,23 +13,23 @@ acol = np.array([1,2,5,0,5,1,3,4,6,1,2,1,3], dtype=np.int32)
 aval = np.array([0.7,0.6,0.4,0.1,0.1,0.3,0.6,0.7,0.2,0.5,0.2,0.1,0.6], dtype=np.float64)
 print A
 
-for i in xrange(0,1):
+for i in xrange(0,10):
     solver = QRMUMPSSolver((m, n, arow, acol, aval), verbose=False)
-    print i
+    print "i:", i
 
-solver.analyze()
-# print solver.analyzed
-
-solver.factorize()
-
-e = np.ones(n, dtype=np.float64)
-rhs = np.dot(A, e)
-
-
-x = solver.solve(rhs)
-#np.testing.assert_almost_equal(x,e)
-print e, x
-print np.dot(A, x), rhs
+    solver.analyze()
+    # print solver.analyzed
+    
+    solver.factorize()
+    
+    e = np.ones(n, dtype=np.float64)
+    rhs = np.dot(A, e)
+    
+    
+    x = solver.solve(rhs)
+    #np.testing.assert_almost_equal(x,e)
+    print e, x
+    print np.dot(A, x), rhs
 
 print "= " * 80
 

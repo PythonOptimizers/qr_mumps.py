@@ -3,12 +3,10 @@ This is the interface to qr_mumps
 
 """
 
-from cpython.mem cimport PyMem_Malloc, PyMem_Realloc, PyMem_Free
 from cpython.string cimport PyString_AsString
-from cpython cimport Py_INCREF, Py_DECREF
 
 from libc.stdint cimport int64_t
-from libc.string cimport strncpy
+from libc.string cimport strncpy, memcpy
 
 import numpy as np
 cimport numpy as cnp
@@ -128,16 +126,12 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         Args:
             m: number of lines of matrix A
             n: number of columns of matrix A
-            a_row: row indices pointer of non zero elements of A
-            a_col: column indices pointer of non zero elements of A
-            a_val: values pointer of non zeros elements of A
             verbose: a boolean to turn on or off the verbosity of MUMPS
 
         Warning: if the numpy arrays are modified externally by the user between
         two calls to solve, the changes in arrays won't be passed to QR_MUMPS.
 
         """
-
         self.nrow = m
         self.ncol = n
         self.nnz = nnz
@@ -162,18 +156,17 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         #    self.set_silent()
 
 
-    cdef get_data_pointers(self,
-                           @index|numpy_to_c@ * a_row,
-                           @index|numpy_to_c@ * a_col,
-                           @type|numpy_to_c@ * a_val):
+    cdef index_to_fortran(self):
+        """
+        Convert 0-based indices to Fortran indices (1-based).
+
+        Note:
+          Only for ``irn`` and ``jcn``.
+        """
 
         # transform c index arrays to fortran arrays
-        c_to_fortran_index_array(a_row, self.nnz)
-        c_to_fortran_index_array(a_col, self.nnz)
-
-        self.params.irn = <@index|numpy_to_c@ *> a_row
-        self.params.jcn = <@index|numpy_to_c@ *> a_col
-        self.params.val = <@type|numpy_to_c@ *>  a_val
+        c_to_fortran_index_array(self.params.irn, self.nnz)
+        c_to_fortran_index_array(self.params.jcn, self.nnz)
 
 
     def __dealloc__(self):

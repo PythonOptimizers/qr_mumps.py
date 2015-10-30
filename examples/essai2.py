@@ -22,8 +22,9 @@ B.put_triplet(row, col, val)
 
 e = np.ones(n, 'd')
 rhs = A*e
-for i in xrange(0,10):
+for i in xrange(0,100):
     solver = QRMUMPSSolver(B, verbose=True)
+    print i
 
 
 solver.analyze()

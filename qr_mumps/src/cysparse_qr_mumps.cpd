@@ -1,10 +1,9 @@
-from cysparse.types.cysparse_types cimport *
-
 from cysparse.sparse.ll_mat_matrices.ll_mat_@index@_t_@type@_t cimport LLSparseMatrix_@index@_t_@type@_t
-from cysparse.sparse.csc_mat_matrices.csc_mat_@index@_t_@type@_t cimport CSCSparseMatrix_@index@_t_@type@_t
-from cysparse.types.cysparse_types import *
 
 from qr_mumps.src.qr_mumps_@index@_@type@ cimport BaseQRMUMPSSolver_@index@_@type@
 
 cimport numpy as cnp
 
+cdef class CySparseQRMUMPSSolver_@index@_@type@(BaseQRMUMPSSolver_@index@_@type@):
+    cpdef get_matrix_data(self, LLSparseMatrix_@index@_t_@type@_t A)
+ 

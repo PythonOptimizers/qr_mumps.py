@@ -99,6 +99,7 @@ if build_cysparse_ext:
   {% for element_type in type_list %}
     cysparse_ext_params_@index_type@_@element_type@ = copy.deepcopy(ext_params)
     cysparse_ext_params_@index_type@_@element_type@['include_dirs'].extend(cysparse_rootdir)
+    cysparse_ext_params_@index_type@_@element_type@['include_dirs'].extend(qr_mumps_include_dirs)
     qr_mumps_ext.append(Extension(name="qr_mumps.src.cysparse_qr_mumps_@index_type@_@element_type@",
                  sources=['qr_mumps/src/cysparse_qr_mumps_@index_type@_@element_type@.pxd',
                  'qr_mumps/src/cysparse_qr_mumps_@index_type@_@element_type@.pyx'],
