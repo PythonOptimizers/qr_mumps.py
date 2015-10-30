@@ -26,6 +26,9 @@ It supports all four types (single real, double real, single complex and double 
 
 ## TODO:
 
-  - [ ] Everything 
-  - [ ] Add tests for everything
+  - [ ] Add tests for everything (almost done)
+  - [ ] Add refine method
+  - [ ] Add a Q-less derived class
+  - [ ] Update examples
+  - [ ] Update docstrings
   - [ ] ensure all code is PEP8 and PEP257 compliant
