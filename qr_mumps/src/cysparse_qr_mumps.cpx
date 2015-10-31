@@ -1,25 +1,14 @@
 from cysparse.sparse.ll_mat_matrices.ll_mat_@index@_t_@type@_t cimport LLSparseMatrix_@index@_t_@type@_t
-from cysparse.sparse.csc_mat_matrices.csc_mat_@index@_t_@type@_t cimport CSCSparseMatrix_@index@_t_@type@_t
-
-from cysparse.types.cysparse_numpy_types import are_mixed_types_compatible, cysparse_to_numpy_type
-from cysparse.types.cysparse_types import *
+from cysparse.types.cysparse_types cimport *
 
 from qr_mumps.src.qr_mumps_@index@_@type@ cimport BaseQRMUMPSSolver_@index@_@type@, c_to_fortran_index_array
 
-from cpython.mem cimport PyMem_Malloc, PyMem_Realloc, PyMem_Free
-from cpython cimport Py_INCREF, Py_DECREF
+from cpython.mem cimport PyMem_Malloc, PyMem_Free
 
 from libc.stdint cimport int64_t
 from libc.string cimport strncpy
 
-import numpy as np
-cimport numpy as cnp
-
-cnp.import_array()
-
-import time
-
-cpdef CySparseQRMUMPSSolver_@index@_@type@(LLSparseMatrix_@index@_t_@type@_t A, verbose=False):
+cdef class CySparseQRMUMPSSolver_@index@_@type@(BaseQRMUMPSSolver_@index@_@type@):
     """
     QR_MUMPS Context.
 
@@ -28,8 +17,7 @@ cpdef CySparseQRMUMPSSolver_@index@_@type@(LLSparseMatrix_@index@_t_@type@_t A, 
     We follow the common use of QR_MUMPS. In particular, we use the same names for the methods of this
     class as their corresponding counter-parts in QR_MUMPS.
 
-    Args:
-        A: A :class:`LLSparseMatrix_@index@_t_@type@_t` object.
+    A: A :class:`LLSparseMatrix_@index@_t_@type@_t` object.
 
     Warning:
         The solver takes a "snapshot" of the matrix ``A``, i.e. the results given by the solver are only
@@ -38,26 +26,34 @@ cpdef CySparseQRMUMPSSolver_@index@_@type@(LLSparseMatrix_@index@_t_@type@_t A, 
 
     """
 
-    Py_INCREF(A)  # increase ref to object to avoid the user deleting it explicitly or implicitly
-    m = A.nrow
-    n = A.ncol
-    nnz = A.nnz
+    def __cinit__(self, int m, int n, int nnz, verbose=False):
+        pass
 
-    # create i, j, val
-    arow = <@index|numpy_to_c@ *> PyMem_Malloc(nnz * sizeof(@index|numpy_to_c@))
-    acol = <@index|numpy_to_c@ *> PyMem_Malloc(nnz * sizeof(@index|numpy_to_c@))
- 
+    def __dealloc__(self):
+        PyMem_Free(self.params.irn)
+        PyMem_Free(self.params.jcn)
+        PyMem_Free(self.params.val)
+
+    cpdef get_matrix_data(self, LLSparseMatrix_@index@_t_@type@_t A):
+        """
+        Args:
+            A: :class:`LLSparseMatrix_@index@_t_@type@_t` object.
+
+        Note: we keep the same name for this method in all derived classes.
+        """
+        # allocate memory for irn and jcn
+        self.params.irn = <@index|numpy_to_c@ *> PyMem_Malloc(self.nnz * sizeof(@index|numpy_to_c@))
+        self.params.jcn = <@index|numpy_to_c@ *> PyMem_Malloc(self.nnz * sizeof(@index|numpy_to_c@))
+
 {% if type in complex_list %} 
-    a_val = <@type@_t *> PyMem_Malloc(nnz * sizeof(@type@_t))
-    A.take_triplet_pointers(arow, acol, a_val)
-    aval = <@type|numpy_to_c@ *> a_val
+        a_val = <@type@_t *> PyMem_Malloc(self.nnz * sizeof(@type@_t))
+        A.take_triplet_pointers(self.params.irn, self.params.jcn, a_val)
+        self.params.val = <@type|numpy_to_c@ *> a_val
 {% else %}
-    aval = <@type@_t *> PyMem_Malloc(nnz * sizeof(@type@_t))
-    A.take_triplet_pointers(arow, acol, aval)
+        self.params.val = <@type@_t *> PyMem_Malloc(self.nnz * sizeof(@type@_t))
+        A.take_triplet_pointers(self.params.irn, self.params.jcn, self.params.val)
 {% endif %}
 
-    solver = BaseQRMUMPSSolver_@index@_@type@(m, n, nnz, verbose)
-    solver.get_data_pointers(arow, acol, aval)
-
-    return solver
+        # convert irn and jcn indices to Fortran format
+        self.index_to_fortran()
 

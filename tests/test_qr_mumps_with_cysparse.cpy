@@ -68,7 +68,7 @@ class CySparseQRMUMPSSolverTestCaseMoreLinesThanColumns_@index_type@_@element_ty
         x = solver.minimum_norm(rhs)
         print x
         assert_almost_equal(self.A*x, rhs, 5)
- 
+  
 
 class CySparseQRMUMPSSolverTestCaseMoreColumnsThanLines_@index_type@_@element_type@(TestCase):
     def setUp(self):

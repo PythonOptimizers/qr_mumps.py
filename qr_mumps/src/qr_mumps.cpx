@@ -3,12 +3,10 @@ This is the interface to qr_mumps
 
 """
 
-from cpython.mem cimport PyMem_Malloc, PyMem_Realloc, PyMem_Free
 from cpython.string cimport PyString_AsString
-from cpython cimport Py_INCREF, Py_DECREF
 
 from libc.stdint cimport int64_t
-from libc.string cimport strncpy
+from libc.string cimport strncpy, memcpy
 
 import numpy as np
 cimport numpy as cnp
@@ -128,16 +126,12 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         Args:
             m: number of lines of matrix A
             n: number of columns of matrix A
-            a_row: row indices pointer of non zero elements of A
-            a_col: column indices pointer of non zero elements of A
-            a_val: values pointer of non zeros elements of A
             verbose: a boolean to turn on or off the verbosity of MUMPS
 
         Warning: if the numpy arrays are modified externally by the user between
         two calls to solve, the changes in arrays won't be passed to QR_MUMPS.
 
         """
-
         self.nrow = m
         self.ncol = n
         self.nnz = nnz
@@ -147,9 +141,6 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         self.params.m = self.nrow
         self.params.n = self.ncol
         self.params.nz = self.nnz
-        self.params.irn = <@index|numpy_to_c@ *> PyMem_Malloc(nnz * sizeof(@index|numpy_to_c@))
-        self.params.jcn = <@index|numpy_to_c@ *> PyMem_Malloc(nnz * sizeof(@index|numpy_to_c@))
-        self.params.val = <@type|numpy_to_c@ *>  PyMem_Malloc(nnz * sizeof(@type|numpy_to_c@))
  
         if m < n:
             self.transp = 't' # True
@@ -165,29 +156,22 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         #    self.set_silent()
 
 
-    cdef get_data_pointers(self,
-                           @index|numpy_to_c@ * a_row,
-                           @index|numpy_to_c@ * a_col,
-                           @type|numpy_to_c@ * a_val):
+    cdef index_to_fortran(self):
+        """
+        Convert 0-based indices to Fortran indices (1-based).
+
+        Note:
+          Only for ``irn`` and ``jcn``.
+        """
 
         # transform c index arrays to fortran arrays
-        c_to_fortran_index_array(a_row, self.nnz)
-        c_to_fortran_index_array(a_col, self.nnz)
-
-        self.params.irn = <@index|numpy_to_c@ *> a_row
-        self.params.jcn = <@index|numpy_to_c@ *> a_col
-        self.params.val = <@type|numpy_to_c@ *>  a_val
+        c_to_fortran_index_array(self.params.irn, self.nnz)
+        c_to_fortran_index_array(self.params.jcn, self.nnz)
 
 
     def __dealloc__(self):
         # autodestruct qr_mumps internal
-        # self.params.irn = NULL
-        # self.params.jcn = NULL
-        # self.params.val = NULL
         @type|numpy_to_qr_mumps_type@qrm_spmat_destroy_c(&self.params)
-        PyMem_Free(self.params.irn)
-        PyMem_Free(self.params.jcn)
-        PyMem_Free(self.params.val)
 
     # Properties
     property analyzed:
@@ -257,7 +241,6 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
 
     def solve(self, rhs, compute_residuals=False):
         """
-
         Args:
             rhs: dense NumPy array (matrix or vector).
             compute_residuals: boolean to compute the scaled norm of the residual (i.e. the normwise backward error).
@@ -266,7 +249,6 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
             Dense NumPy array ``x`` (matrix or vector) with the solution(s) of the linear system
             or
             a tuple containing the solutions of the linear system and the scaled norm of the residual.
-
 
         Warning: eventough it is written in qr_mumps doc that it is possible to solve the system for multiple
         right-hand-side, I can't make it work!
@@ -425,38 +407,4 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
        
         return new_x
 
-
-
-cpdef NumpyQRMUMPSSolver_@index@_@type@(@index|numpy_to_c@ m, @index|numpy_to_c@ n,
-                                        cnp.ndarray[@index|numpy_to_c@] a_row,
-                                        cnp.ndarray[@index|numpy_to_c@] a_col,
-                                        cnp.ndarray[@type|numpy_to_c@] a_val,
-                                        verbose=False):
-
-    """
-    QR_MUMPS solver when matrix A is supplied in coordinate format through Numpy arrays.
-
-    Args:
-        m: number of lines of matrix A
-        n: number of columns of matrix A
-        a_row: row indices of non zero elements of A
-        a_col: column indices of non zero elements of A
-        a_val: values of non zeros elements of A
-        verbose: a boolean to turn on or off the verbosity of MUMPS
-
-    Warning: if the numpy arrays are modified externally by the user between
-    two calls to solve, the changes in arrays won't be passed to QR_MUMPS.
-    """
-    nrow = m
-    ncol = n
-    nnz = a_val.size
-    
-    Py_INCREF(a_row)
-    Py_INCREF(a_col)
-    Py_INCREF(a_val)
-
-    solver = BaseQRMUMPSSolver_@index@_@type@(m, n, nnz, verbose)
-    solver.get_data_pointers(<@index|numpy_to_c@ *> cnp.PyArray_DATA(a_row), <@index|numpy_to_c@ *> cnp.PyArray_DATA(a_col), <@type|numpy_to_c@ *> cnp.PyArray_DATA(a_val))
-
-    return solver
 

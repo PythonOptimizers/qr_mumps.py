@@ -3,10 +3,10 @@ Factory method to access qr_mumps.
 """
 import numpy as np
 
-from qr_mumps.src.qr_mumps_INT32_FLOAT32 import NumpyQRMUMPSSolver_INT32_FLOAT32
-from qr_mumps.src.qr_mumps_INT32_FLOAT64 import NumpyQRMUMPSSolver_INT32_FLOAT64
-from qr_mumps.src.qr_mumps_INT32_COMPLEX64 import NumpyQRMUMPSSolver_INT32_COMPLEX64
-from qr_mumps.src.qr_mumps_INT32_COMPLEX128 import NumpyQRMUMPSSolver_INT32_COMPLEX128
+from qr_mumps.src.numpy_qr_mumps_INT32_FLOAT32 import NumpyQRMUMPSSolver_INT32_FLOAT32
+from qr_mumps.src.numpy_qr_mumps_INT32_FLOAT64 import NumpyQRMUMPSSolver_INT32_FLOAT64
+from qr_mumps.src.numpy_qr_mumps_INT32_COMPLEX64 import NumpyQRMUMPSSolver_INT32_COMPLEX64
+from qr_mumps.src.numpy_qr_mumps_INT32_COMPLEX128 import NumpyQRMUMPSSolver_INT32_COMPLEX128
 
 cysparse_installed = False
 try:
@@ -64,15 +64,24 @@ def QRMUMPSSolver(arg1, verbose=False):
 
         if itype == np.int32:
             if dtype == np.float32:
-                return NumpyQRMUMPSSolver_INT32_FLOAT32(m, n, a_row, a_col, a_val, verbose=verbose)
+                solver = NumpyQRMUMPSSolver_INT32_FLOAT32(m, n, a_row.size, verbose=verbose)
+                solver.get_matrix_data(a_row, a_col, a_val)
+                return solver
             elif dtype == np.float64:
-                return NumpyQRMUMPSSolver_INT32_FLOAT64(m, n, a_row, a_col, a_val, verbose=verbose)
+                solver = NumpyQRMUMPSSolver_INT32_FLOAT64(m, n, a_row.size, verbose=verbose)
+                solver.get_matrix_data(a_row, a_col, a_val)
+                return solver
             elif dtype == np.complex64:
-                return NumpyQRMUMPSSolver_INT32_COMPLEX64(m, n, a_row, a_col, a_val, verbose=verbose)
+                solver = NumpyQRMUMPSSolver_INT32_COMPLEX64(m, n, a_row.size, verbose=verbose)
+                solver.get_matrix_data(a_row, a_col, a_val)
+                return solver
             elif dtype == np.complex128:
-                return NumpyQRMUMPSSolver_INT32_COMPLEX128(m, n, a_row, a_col, a_val, verbose=verbose)
+                solver = NumpyQRMUMPSSolver_INT32_COMPLEX128(m, n, a_row.size, verbose=verbose)
+                solver.get_matrix_data(a_row, a_col, a_val)
+                return solver
         else:
             raise TypeError(type_error_msg)
+
 
     elif cysparse_installed:
         if not PyLLSparseMatrix_Check(arg1):
@@ -81,15 +90,25 @@ def QRMUMPSSolver(arg1, verbose=False):
         A = arg1
         itype = A.itype
         dtype = A.dtype
+        m = A.nrow
+        n = A.ncol
 
         if itype == INT32_T:
             if dtype == FLOAT32_T:
-                return CySparseQRMUMPSSolver_INT32_FLOAT32(A, verbose=verbose)
+                solver = CySparseQRMUMPSSolver_INT32_FLOAT32(m, n, A.nnz, verbose=verbose)
+                solver.get_matrix_data(A)
+                return solver
             elif dtype == FLOAT64_T:
-                return CySparseQRMUMPSSolver_INT32_FLOAT64(A, verbose=verbose)
+                solver = CySparseQRMUMPSSolver_INT32_FLOAT64(m, n, A.nnz, verbose=verbose)
+                solver.get_matrix_data(A)
+                return solver
             elif dtype == COMPLEX64_T:
-                return CySparseQRMUMPSSolver_INT32_COMPLEX64(A, verbose=verbose)
+                solver = CySparseQRMUMPSSolver_INT32_COMPLEX64(m, n, A.nnz, verbose=verbose)
+                solver.get_matrix_data(A)
+                return solver
             elif dtype == COMPLEX128_T:
-                return CySparseQRMUMPSSolver_INT32_COMPLEX128(A, verbose=verbose)
+                solver = CySparseQRMUMPSSolver_INT32_COMPLEX128(m, n, A.nnz, verbose=verbose)
+                solver.get_matrix_data(A)
+                return solver
         else:
             raise TypeError(type_error_msg)

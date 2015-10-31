@@ -8,9 +8,7 @@ It supports all four types (single real, double real, single complex and double 
     
 1. You need to install qr_mumps. Follow instructions on [their website](http://buttari.perso.enseeiht.fr/qr_mumps/).
        If you are under OS X, a [Homebrew](http://brew.sh) formula is available. Follow the instructions to install Homebrew.
-       Then, MUMPS and its dependencies can be installed automatically in `/usr/local` by typing
-
-    	brew install gcc  # contains gfortran
+       Then, qr_mumps and its dependencies can be installed automatically in `/usr/local` by typing
 
     	brew tap homebrew/science
 
@@ -28,6 +26,9 @@ It supports all four types (single real, double real, single complex and double 
 
 ## TODO:
 
-  - [ ] Everything 
-  - [ ] Add tests for everything
+  - [ ] Add tests for everything (almost done)
+  - [ ] Add refine method
+  - [ ] Add a Q-less derived class
+  - [ ] Update examples
+  - [ ] Update docstrings
   - [ ] ensure all code is PEP8 and PEP257 compliant

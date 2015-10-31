@@ -5,7 +5,7 @@ import numpy as np
 
 {% for index_type in index_list %}
     {% for element_type in type_list %}
-from qr_mumps.src.qr_mumps_@index_type@_@element_type@ import NumpyQRMUMPSSolver_@index_type@_@element_type@
+from qr_mumps.src.numpy_qr_mumps_@index_type@_@element_type@ import NumpyQRMUMPSSolver_@index_type@_@element_type@
     {% endfor %}
 {% endfor %}
 
@@ -87,7 +87,9 @@ def QRMUMPSSolver(arg1, verbose=False):
         {% else %}
             elif dtype == np.@element_type|lower@:
         {% endif %}
-                return NumpyQRMUMPSSolver_@index_type@_@element_type@(m, n, a_row, a_col, a_val, verbose=verbose)
+                solver = NumpyQRMUMPSSolver_@index_type@_@element_type@(m, n, a_row.size, verbose=verbose)
+                solver.get_matrix_data(a_row, a_col, a_val)
+                return solver
       {% endfor %}
   {% else %}
         elif itype == np.@index_type|lower@:
@@ -97,12 +99,15 @@ def QRMUMPSSolver(arg1, verbose=False):
         {% else %}
             elif dtype == np.@element_type|lower@:
         {% endif %}
-                return NumpyQRMUMPSSolver_@index_type@_@element_type@(m, n, a_row, a_col, a_val, verbose=verbose)
+                solver = NumpyQRMUMPSSolver_@index_type@_@element_type@(m, n, a_row.size, verbose=verbose)
+                solver.get_matrix_data(a_row, a_col, a_val)
+                return solver
       {% endfor %}
   {% endif %}
 {% endfor %}
         else:
             raise TypeError(type_error_msg)
+
 
     elif cysparse_installed:
         if not PyLLSparseMatrix_Check(arg1):
@@ -111,6 +116,8 @@ def QRMUMPSSolver(arg1, verbose=False):
         A = arg1
         itype = A.itype
         dtype = A.dtype
+        m = A.nrow
+        n = A.ncol
 
 {% for index_type in index_list %}
     {% if index_type == index_list |first %}
@@ -121,7 +128,9 @@ def QRMUMPSSolver(arg1, verbose=False):
         {% else %}
             elif dtype == @element_type@_T:
         {% endif %}
-                return CySparseQRMUMPSSolver_@index_type@_@element_type@(A, verbose=verbose)
+                solver = CySparseQRMUMPSSolver_@index_type@_@element_type@(m, n, A.nnz, verbose=verbose)
+                solver.get_matrix_data(A)
+                return solver
     {% endfor %}
     {% else %}
         elif itype == @index_type@_T:
@@ -131,7 +140,9 @@ def QRMUMPSSolver(arg1, verbose=False):
         {% else %}
             elif dtype == @element_type@_T:
         {% endif %}
-                return CySparseQRMUMPSSolver_@index_type@_@element_type@(A, verbose=verbose)
+                solver = CySparseQRMUMPSSolver_@index_type@_@element_type@(m, n, A.nnz, verbose=verbose)
+                solver.get_matrix_data(A)
+                return solver
     {% endfor %}
     {% endif %}
 {% endfor %}

@@ -1,4 +1,3 @@
-cimport numpy as cnp
 cdef extern from "@type|numpy_to_qr_mumps_type@qrm_mumps.h":
     cdef struct @type|numpy_to_qr_mumps_type@qrm_spmat_type_c:
         int          *irn
@@ -104,9 +103,6 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         object factorize_stats
         object solve_stats
 
-    cdef get_data_pointers(self,
-                           @index|numpy_to_c@ * a_row,
-                           @index|numpy_to_c@ * a_col,
-                           @type|numpy_to_c@ * a_val)
+    cdef index_to_fortran(self)
 
     cpdef cnp.ndarray[cnp.@type|lower@_t] refine(self, cnp.ndarray[cnp.@type|lower@_t] x, cnp.ndarray[cnp.@type|lower@_t] rhs, @index|numpy_to_c@ niter)
