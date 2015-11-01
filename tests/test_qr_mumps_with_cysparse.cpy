@@ -59,15 +59,27 @@ class CySparseQRMUMPSSolverTestCaseMoreLinesThanColumns_@index_type@_@element_ty
         x = solver.solve(rhs)
         assert_almost_equal(x, B, 5)
 
+    def test_dense_least_squares_multiple_rhs(self):
+        solver = QRMUMPSSolver(self.A, verbose=False)
+        B = np.ones([self.n, 3], dtype=np.@element_type|lower@)
+        B[: ,1] = 2 * B[:,1]
+        B[: ,2] = 3 * B[:,2]
+        rhs = self.A * B
+        x = solver.least_squares(rhs)
+        assert_almost_equal(x, B, 5)
+
+    def test_dense_least_squares_wrong_size_rhs(self):
+        solver = QRMUMPSSolver(self.A, verbose=False)
+        rhs = np.ones([self.m+1, 1], dtype=np.@element_type|lower@)
+        assert_raises(ValueError, solver.least_squares, rhs)
+
     def test_dense_minimum_norm_multiple_rhs(self):
         solver = QRMUMPSSolver(self.A, verbose=False)
         B = np.ones([self.n, 3], dtype=np.@element_type|lower@)
         B[: ,1] = 2 * B[:,1]
         B[: ,2] = 3 * B[:,2]
         rhs = self.A * B
-        x = solver.minimum_norm(rhs)
-        print x
-        assert_almost_equal(self.A*x, rhs, 5)
+        assert_raises(RuntimeError, solver.minimum_norm, rhs)
   
 
 class CySparseQRMUMPSSolverTestCaseMoreColumnsThanLines_@index_type@_@element_type@(TestCase):
@@ -79,7 +91,6 @@ class CySparseQRMUMPSSolverTestCaseMoreColumnsThanLines_@index_type@_@element_ty
         aval = np.array([0.7,0.6,0.4,0.1,0.1,0.3,0.6,0.7,0.2,0.5,0.2,0.1,0.6], dtype=np.@element_type|lower@)
         self.A = NewLLSparseMatrix(nrow=self.m, ncol=self.n, itype=types.@index_type@_T, dtype=types.@element_type@_T)
         self.A.put_triplet(arow, acol, aval)
-        print self.A
 
     def test_init(self):
         solver = QRMUMPSSolver(self.A, verbose=False)
@@ -103,9 +114,6 @@ class CySparseQRMUMPSSolverTestCaseMoreColumnsThanLines_@index_type@_@element_ty
         e = np.ones(self.n, dtype=np.@element_type|lower@)
         rhs = self.A * e
         x = solver.solve(rhs)
-        print 'rhs:', rhs
-        print 'x:', x
-        print 'Ax:', self.A*x
         assert_almost_equal(self.A*x, rhs, 5)
 
     def test_dense_solve_multiple_rhs(self):
@@ -115,15 +123,18 @@ class CySparseQRMUMPSSolverTestCaseMoreColumnsThanLines_@index_type@_@element_ty
         B[: ,1] = 2 * B[:,1]
         B[: ,2] = 3 * B[:,2]
         rhs = self.A * B
-        x1 = solver.solve(rhs[:,0])
-        x2 = solver.solve(rhs[:,1])
-        x3 = solver.solve(rhs[:,2])
         x = solver.solve(rhs)
-        print x1
-        print x2
-        print x3
-        print x
         assert_almost_equal(self.A*x, rhs, 5)
+
+    def test_least_squares(self):
+        solver = QRMUMPSSolver(self.A, verbose=False)
+        rhs = np.ones([self.m, 1], dtype=np.@element_type|lower@)
+        assert_raises(RuntimeError, solver.least_squares, rhs)
+          
+    def test_dense_minimum_norm_wrong_size_rhs(self):
+        solver = QRMUMPSSolver(self.A, verbose=False)
+        rhs = np.ones([self.m+1, 1], dtype=np.@element_type|lower@)
+        assert_raises(ValueError, solver.minimum_norm, rhs)
 
     def test_dense_minimum_norm_multiple_rhs(self):
         solver = QRMUMPSSolver(self.A, verbose=False)
@@ -132,7 +143,6 @@ class CySparseQRMUMPSSolverTestCaseMoreColumnsThanLines_@index_type@_@element_ty
         B[: ,2] = 3 * B[:,2]
         rhs = self.A * B
         x = solver.minimum_norm(rhs)
-        print x
         assert_almost_equal(self.A*x, rhs, 5)
 
 

@@ -1,3 +1,5 @@
+cimport numpy as cnp
+
 cdef extern from "@type|numpy_to_qr_mumps_type@qrm_mumps.h":
     cdef struct @type|numpy_to_qr_mumps_type@qrm_spmat_type_c:
         int          *irn
@@ -60,7 +62,7 @@ cdef extern from "@type|numpy_to_qr_mumps_type@qrm_mumps.h":
     cdef enum rcntl:
         qrm_amalgthr_
     
-    cdef enum ords:
+    cdef enum:
         qrm_auto=0
         qrm_natural_=1
         qrm_given_=2
@@ -99,9 +101,12 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         bint factorized
         bint out_of_core
 
+        int ordering
+
         object analysis_stats
         object factorize_stats
         object solve_stats
 
     cdef index_to_fortran(self)
 
+    cpdef cnp.ndarray[cnp.@type|lower@_t] refine(self, cnp.ndarray[cnp.@type|lower@_t] x, cnp.ndarray[cnp.@type|lower@_t] rhs, @index|numpy_to_c@ niter)

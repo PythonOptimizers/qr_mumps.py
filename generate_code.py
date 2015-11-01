@@ -88,6 +88,14 @@ def numpy_to_c(numpy_type):
     else:
         raise TypeError("Not a recognized Numpy type")
 
+def numpy_to_single_double(numpy_type):
+    if numpy_type in ['FLOAT32', 'COMPLEX64']:
+        return 'float32'
+    elif numpy_type in ['FLOAT64', 'COMPLEX128']:
+        return 'float64'
+    else:
+        raise TypeError("Not a recognized Numpy type")
+
 def numpy_to_c_single_double(numpy_type):
     if numpy_type in ['FLOAT32', 'COMPLEX64']:
         return 'float'
@@ -153,6 +161,7 @@ if __name__ == "__main__":
     GENERAL_ENVIRONMENT.filters['numpy_to_qr_mumps_type'] = numpy_to_qr_mumps_type
     GENERAL_ENVIRONMENT.filters['numpy_to_c'] = numpy_to_c
     GENERAL_ENVIRONMENT.filters['numpy_to_c_single_double'] = numpy_to_c_single_double
+    GENERAL_ENVIRONMENT.filters['numpy_to_single_double'] = numpy_to_single_double
 
     # create logger
     logger_name = mumps_config.get('CODE_GENERATION', 'log_name')

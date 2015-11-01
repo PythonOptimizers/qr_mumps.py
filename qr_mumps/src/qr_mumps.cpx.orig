@@ -82,7 +82,7 @@ cdef extern from "@type|numpy_to_qr_mumps_type@qrm_mumps.h":
     cdef enum rcntl:
         qrm_amalgthr_
     
-    cdef enum:
+    cdef enum ords:
         qrm_auto=0
         qrm_natural_=1
         qrm_given_=2
@@ -110,14 +110,7 @@ cdef c_to_fortran_index_array(@index|numpy_to_c@ * a, @index|numpy_to_c@ a_size)
     for i from 0 <= i < a_size:
         a[i] += 1
 
-# QR_MUMPS possible ordering methods
-orderings = { 'auto' : qrm_auto, 'natural' : qrm_natural_, 'given' : qrm_given_,
-              'colamd' : qrm_colamd_, 'metis' : qrm_metis_, 'scotch' : qrm_scotch_, 'unset' : 6}
-
-ordering_name = [ 'auto', 'natural', 'given',
-                  'colamd', 'metis', 'scotch', 'unset']
-
-# Base QR_MUMPS Solver
+# MUMPS CONTEXT
 cdef class BaseQRMUMPSSolver_@index@_@type@:
     """
     Base QR_MUMPS Context.
@@ -125,7 +118,7 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
     This version **only** deals with pointers.
 
     We follow the common use of QR_MUMPS. In particular, we use the same names for
-    the methods of this class as their corresponding counter-parts in QR_MUMPS.
+    the methods of this class as their corresponding counter-parts in MUMPS.
     """
 
     def __cinit__(self, @index|numpy_to_c@ m, @index|numpy_to_c@ n, @index|numpy_to_c@ nnz, verbose=False):
@@ -133,14 +126,16 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         Args:
             m: number of lines of matrix A
             n: number of columns of matrix A
-            nnz: number of nonzeros of matrix A
             verbose: a boolean to turn on or off the verbosity of MUMPS
+
+        Warning: if the numpy arrays are modified externally by the user between
+        two calls to solve, the changes in arrays won't be passed to QR_MUMPS.
+
         """
         self.nrow = m
         self.ncol = n
         self.nnz = nnz
 
-        # Initialize QR_MUMPS internal structure 
         @type|numpy_to_qr_mumps_type@qrm_spmat_init_c(&self.params)
 
         self.params.m = self.nrow
@@ -154,12 +149,11 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
 
         self.analyzed = False
         self.factorized = False
-        self.ordering = 6
         qrm_gseti_c(PyString_AsString("qrm_eunit"), 6)
         qrm_gseti_c(PyString_AsString("qrm_ounit"), 6)
 
-        if not verbose:
-            self.set_silent()
+        #if not verbose:
+        #    self.set_silent()
 
 
     cdef index_to_fortran(self):
@@ -188,13 +182,13 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         def __get__(self): return self.nrow
     property n:
         def __get__(self): return self.ncol
-    property nnz:
-        def __get__(self): return self.nnz
 
 
     def set_silent(self):
         """
-        Silence **all** QR_MUMPS output.
+        Silence **all* MUMPS output.
+
+        See MUMPS documentation.
         """
         qrm_gseti_c("qrm_ounit", 0)
 
@@ -205,18 +199,14 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
 
         TODO: ordering
         """
-        if self.analyzed and self.ordering==orderings[ordering]:
+        if self.analyzed:
             return
-
-        # Set ordering option
-        @type|numpy_to_qr_mumps_type@qrm_pseti_c(&self.params, "qrm_ordering", orderings[ordering])
 
         t1 = time.clock()
         @type|numpy_to_qr_mumps_type@qrm_analyse_c(&self.params, self.transp)
         t2 = time.clock()
 
         self.analyzed = True
-        self.ordering = orderings[ordering]
 
         # self.analysis_stats = AnalysisStatistics(self.params,
         #                                          t2 - t1)
@@ -241,17 +231,8 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         """
         # TODO: ordering
 
-        # Check if `self.ordering` was already initialized.
-        # If it has been, factorized must be called with previous ordering, so that
-        # a warning is issued to the user to tell him/her to rerun `analyze` with another
-        # ordering.
-        if self.ordering<6 and orderings[ordering]!=self.ordering:
-            raise Warning('Analyze was previously called with another ordering. It has been ignored!'+
-                          'If you want to use another ordering option, you **need** to rerun `analyze`'+
-                          'and supply the new ordering option.')
-
         # Analysis phase must be done before factorization
-        if not self.analyzed:
+        if not self.analyzed :
             self.analyze(ordering=ordering)
 
         @type|numpy_to_qr_mumps_type@qrm_factorize_c(&self.params, self.transp)
@@ -371,6 +352,7 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         @type|numpy_to_qr_mumps_type@qrm_min_norm_c(&self.params, <@type|numpy_to_c@ *> cnp.PyArray_DATA(b), <@type|numpy_to_c@ *> cnp.PyArray_DATA(x), nrhs)
         return x
 
+<<<<<<< HEAD
 
     cpdef cnp.ndarray[cnp.@type|lower@_t] refine(self, cnp.ndarray[cnp.@type|lower@_t] x, cnp.ndarray[cnp.@type|lower@_t] rhs, @index|numpy_to_c@ niter):
         """
@@ -427,3 +409,39 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         return new_x
 
 
+
+cpdef NumpyQRMUMPSSolver_@index@_@type@(@index|numpy_to_c@ m, @index|numpy_to_c@ n,
+                                        cnp.ndarray[@index|numpy_to_c@] a_row,
+                                        cnp.ndarray[@index|numpy_to_c@] a_col,
+                                        cnp.ndarray[@type|numpy_to_c@] a_val,
+                                        verbose=False):
+
+    """
+    QR_MUMPS solver when matrix A is supplied in coordinate format through Numpy arrays.
+
+    Args:
+        m: number of lines of matrix A
+        n: number of columns of matrix A
+        a_row: row indices of non zero elements of A
+        a_col: column indices of non zero elements of A
+        a_val: values of non zeros elements of A
+        verbose: a boolean to turn on or off the verbosity of MUMPS
+
+    Warning: if the numpy arrays are modified externally by the user between
+    two calls to solve, the changes in arrays won't be passed to QR_MUMPS.
+    """
+    nrow = m
+    ncol = n
+    nnz = a_val.size
+    
+    Py_INCREF(a_row)
+    Py_INCREF(a_col)
+    Py_INCREF(a_val)
+
+    solver = BaseQRMUMPSSolver_@index@_@type@(m, n, nnz, verbose)
+    solver.get_data_pointers(<@index|numpy_to_c@ *> cnp.PyArray_DATA(a_row), <@index|numpy_to_c@ *> cnp.PyArray_DATA(a_col), <@type|numpy_to_c@ *> cnp.PyArray_DATA(a_val))
+
+    return solver
+
+=======
+>>>>>>> develop
