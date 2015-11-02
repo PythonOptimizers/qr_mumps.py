@@ -36,13 +36,13 @@ default_include_dir = qr_mumps_config.get('DEFAULT', 'include_dirs').split(os.pa
 default_library_dir = qr_mumps_config.get('DEFAULT', 'library_dirs').split(os.pathsep)
 
 # qr_mumps
-qr_mumps_compiled_in_64bits = qr_mumps_config.getboolean('qr_mumps', 'qr_mumps_compiled_in_64bits')
+qr_mumps_compiled_in_64bits = qr_mumps_config.getboolean('QR_MUMPS', 'qr_mumps_compiled_in_64bits')
 
 # find user defined directories
-qr_mumps_include_dirs = qr_mumps_config.get('qr_mumps', 'include_dirs').split(os.pathsep)
+qr_mumps_include_dirs = qr_mumps_config.get('QR_MUMPS', 'include_dirs').split(os.pathsep)
 if qr_mumps_include_dirs == '':
     qr_mumps_include_dirs = default_include_dir
-qr_mumps_library_dirs = qr_mumps_config.get('qr_mumps', 'library_dirs').split(os.pathsep)
+qr_mumps_library_dirs = qr_mumps_config.get('QR_MUMPS', 'library_dirs').split(os.pathsep)
 if qr_mumps_library_dirs == '':
     qr_mumps_library_dirs = default_library_dir
            

@@ -137,7 +137,7 @@ if __name__ == "__main__":
 
     # test if compiled lib has been compiled in 64 or 32 bits
     MUMPS_INT = None
-    if mumps_config.getboolean('qr_mumps', 'qr_mumps_compiled_in_64bits'):
+    if mumps_config.getboolean('QR_MUMPS', 'qr_mumps_compiled_in_64bits'):
         MUMPS_INT = 'INT64'
     else:
         MUMPS_INT = 'INT32'
