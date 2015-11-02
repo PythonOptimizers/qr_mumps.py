@@ -17,12 +17,12 @@ for i in xrange(0,1):
     solver = QRMUMPSSolver((m, n, arow, acol, aval), verbose=False)
     print "i:", i
 
-    solver.analyze()
-    print solver.analysis_statistics
+    #solver.analyze('metis')
+    #print solver.analysis_statistics
 
     # print solver.analyzed
     
-    solver.factorize()
+    solver.factorize('scotch')
     print solver.factorization_statistics
     
     e = np.ones(n, dtype=np.float64)
