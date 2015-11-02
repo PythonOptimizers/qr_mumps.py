@@ -122,7 +122,7 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         int ordering
 
         AnalysisStatistics analysis_stats
-        FactorizationStatistics factorize_stats
+        FactorizationStatistics factorization_stats
         object solve_stats
 
     cdef index_to_fortran(self)

@@ -19,9 +19,11 @@ for i in xrange(0,1):
 
     solver.analyze()
     print solver.analysis_statistics
+
     # print solver.analyzed
     
     solver.factorize()
+    print solver.factorization_statistics
     
     e = np.ones(n, dtype=np.float64)
     rhs = np.dot(A, e)
