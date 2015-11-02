@@ -90,7 +90,7 @@ cdef extern from "@type|numpy_to_qr_mumps_type@qrm_mumps.h":
         qrm_metis_=4
         qrm_scotch_=5
     
-    cdef enum gstats:
+    cdef enum:
         qrm_e_facto_flops_=0
         qrm_e_nnz_r_=1
         qrm_e_nnz_h_=2
@@ -109,6 +109,54 @@ cdef c_to_fortran_index_array(@index|numpy_to_c@ * a, @index|numpy_to_c@ a_size)
 
     for i from 0 <= i < a_size:
         a[i] += 1
+
+cdef class AnalysisStatistics:
+    """
+    Statistics computed after an analysis phase has been performed.
+    """
+    def __cinit__(self, params, ordering, time):
+        self.e_facto_flops = params[qrm_e_facto_flops_]
+        self.e_nnz_r = params[qrm_e_nnz_r_]
+        self.e_nnz_h = params[qrm_e_nnz_h_]
+        self.ordering = ordering
+        self.time = time
+
+    def __str__(self):
+        parts = ["Analysis statistics\n",
+                 "-------------------\n",
+                 "estimated number of nonzeros in matrix R: ",
+                 str(self.e_nnz_r), "\n",
+                 "estimated number of nonzeros in matrix H: ",
+                 str(self.e_nnz_h), "\n",
+                 "estimated number of flops: ", str(self.e_facto_flops), "\n",
+                 "ordering used: ", ordering_name[self.ordering]]
+        if hasattr(self, "time"):
+            parts.extend(["\nanalysis time: ", str(self.time), " secs"])
+        return "".join(parts)
+
+
+cdef class FactorizationStatistics(object):
+    """
+    Statistics computed after a factorization phase has been performed.
+    """
+    def __cinit__(self, params, ordering, time):
+        self.facto_flops = params.gstats[qrm_facto_flops_]
+        self.nnz_r = params.gstats[qrm_nnz_r_]
+        self.nnz_h = params.gstats[qrm_nnz_h_]
+        self.ordering = ordering
+        self.time = time
+
+    def __str__(self):
+        parts = ["Factorization statistics\n",
+                 "------------------------\n",
+                 "nonzeros in R matrix: ", str(self.nnz_r), "\n",
+                 "nonzeros in H matrix: ", str(self.nnz_h), "\n",
+                 "floating point operations: ", str(self.facto_flops), "\n", 
+                 "ordering used: ", ordering_name[self.ordering]]
+        if hasattr(self, "time"):
+            parts.extend(["\nfactorization time: ", str(self.time), " secs"])
+        return "".join(parts)
+
 
 # QR_MUMPS possible ordering methods
 orderings = { 'auto' : qrm_auto, 'natural' : qrm_natural_, 'given' : qrm_given_,
@@ -154,9 +202,13 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
 
         self.analyzed = False
         self.factorized = False
+
+        # set ordering to 'unset' : 6
         self.ordering = 6
-        qrm_gseti_c(PyString_AsString("qrm_eunit"), 6)
-        qrm_gseti_c(PyString_AsString("qrm_ounit"), 6)
+
+        # set error level and output level 
+        qrm_gseti_c("qrm_eunit", 6)
+        qrm_gseti_c("qrm_ounit", 6)
 
         if not verbose:
             self.set_silent()
@@ -190,6 +242,10 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         def __get__(self): return self.ncol
     property nnz:
         def __get__(self): return self.nnz
+    property gstats:
+        def __get__(self): return self.params.gstats
+    property analysis_statistics:
+        def __get__(self): return self.analysis_statistics
 
 
     def set_silent(self):
@@ -218,8 +274,9 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         self.analyzed = True
         self.ordering = orderings[ordering]
 
-        # self.analysis_stats = AnalysisStatistics(self.params,
-        #                                          t2 - t1)
+        self.analysis_stats = AnalysisStatistics(self.params.gstats, self.ordering,
+                                                 t2 - t1)
+        print self.analysis_stats
 
     def factorize(self, ordering='auto', pivot_tol=0.01):
         """

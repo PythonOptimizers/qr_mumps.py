@@ -83,6 +83,24 @@ cdef extern from "@type|numpy_to_qr_mumps_type@qrm_mumps.h":
         qrm_yes_=1
     
 
+cdef class AnalysisStatistics:
+    cdef :
+        int e_facto_flops
+        int e_nnz_r
+        int e_nnz_h
+        int ordering
+        double time
+
+
+cdef class FactorizationStatistics:
+    cdef :
+        int facto_flops
+        int nnz_r
+        int nnz_h
+        int ordering
+        double time
+
+
 cdef c_to_fortran_index_array(@index|numpy_to_c@ * a, @index|numpy_to_c@ a_size)
 
 cdef class BaseQRMUMPSSolver_@index@_@type@:
@@ -92,7 +110,7 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         int ncol
         int nnz
 
-        # MUMPS
+        # QR_MUMPS internal structure
         @type|numpy_to_qr_mumps_type@qrm_spmat_type_c params
  
         char transp 
@@ -103,8 +121,8 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
 
         int ordering
 
-        object analysis_stats
-        object factorize_stats
+        AnalysisStatistics analysis_stats
+        FactorizationStatistics factorize_stats
         object solve_stats
 
     cdef index_to_fortran(self)
