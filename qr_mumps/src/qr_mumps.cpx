@@ -20,11 +20,11 @@ cdef extern from "complex.h":
     pass
 {% endif %}
 
-cdef extern from "@type|numpy_to_qr_mumps_type@qrm_mumps.h":
-    cdef struct @type|numpy_to_qr_mumps_type@qrm_spmat_type_c:
+cdef extern from "@type|generic_to_qr_mumps_type@qrm_mumps.h":
+    cdef struct @type|generic_to_qr_mumps_type@qrm_spmat_type_c:
         int          *irn
         int          *jcn
-        @type|numpy_to_c@ *val
+        @type|generic_to_c_type@ *val
         int          m, n, nz
         int          *cperm_in
         int          icntl[20]
@@ -34,39 +34,39 @@ cdef extern from "@type|numpy_to_qr_mumps_type@qrm_mumps.h":
     
     
     cdef double qrm_swtime();
-    cdef void @type|numpy_to_qr_mumps_type@qrm_spmat_init_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_spmat_destroy_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_readmat_c(char *matfile, @type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_analyse_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char transp);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_factorize_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char transp);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_solve_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char transp,
-                          @type|numpy_to_c@ *b, @type|numpy_to_c@ *x, const int nrhs);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_apply_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char transp,
-                          @type|numpy_to_c@ *b, const int nrhs);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_matmul_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char transp,
-                          const @type|numpy_to_c@ alpha, @type|numpy_to_c@ *x, 
-                          const @type|numpy_to_c@ beta, @type|numpy_to_c@ *y, 
+    cdef void @type|generic_to_qr_mumps_type@qrm_spmat_init_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c);
+    cdef void @type|generic_to_qr_mumps_type@qrm_spmat_destroy_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c);
+    cdef void @type|generic_to_qr_mumps_type@qrm_readmat_c(char *matfile, @type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c);
+    cdef void @type|generic_to_qr_mumps_type@qrm_analyse_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char transp);
+    cdef void @type|generic_to_qr_mumps_type@qrm_factorize_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char transp);
+    cdef void @type|generic_to_qr_mumps_type@qrm_solve_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char transp,
+                          @type|generic_to_c_type@ *b, @type|generic_to_c_type@ *x, const int nrhs);
+    cdef void @type|generic_to_qr_mumps_type@qrm_apply_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char transp,
+                          @type|generic_to_c_type@ *b, const int nrhs);
+    cdef void @type|generic_to_qr_mumps_type@qrm_matmul_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char transp,
+                          const @type|generic_to_c_type@ alpha, @type|generic_to_c_type@ *x, 
+                          const @type|generic_to_c_type@ beta, @type|generic_to_c_type@ *y, 
                           const int nrhs);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_matnrm_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char ntype, 
-                          @type|numpy_to_c_single_double@ *nrm);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_vecnrm_c(const @type|numpy_to_c@ *x, const int n, const int nrhs, 
-                          const char ntype, @type|numpy_to_c_single_double@ *nrm);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_least_squares_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, @type|numpy_to_c@ *b, 
-                          @type|numpy_to_c@ *x, const int nrhs);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_min_norm_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, @type|numpy_to_c@ *b, 
-                                  @type|numpy_to_c@ *x, const int nrhs);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_residual_norm_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, @type|numpy_to_c@ *b, 
-                                  @type|numpy_to_c@ *x, const int nrhs, @type|numpy_to_c_single_double@ *nrm);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_residual_orth_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, @type|numpy_to_c@ *r, 
-                                  const int nrhs, @type|numpy_to_c_single_double@ *nrm);
+    cdef void @type|generic_to_qr_mumps_type@qrm_matnrm_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char ntype, 
+                          @type|generic_to_c_single_double_type@ *nrm);
+    cdef void @type|generic_to_qr_mumps_type@qrm_vecnrm_c(const @type|generic_to_c_type@ *x, const int n, const int nrhs, 
+                          const char ntype, @type|generic_to_c_single_double_type@ *nrm);
+    cdef void @type|generic_to_qr_mumps_type@qrm_least_squares_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, @type|generic_to_c_type@ *b, 
+                          @type|generic_to_c_type@ *x, const int nrhs);
+    cdef void @type|generic_to_qr_mumps_type@qrm_min_norm_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, @type|generic_to_c_type@ *b, 
+                                  @type|generic_to_c_type@ *x, const int nrhs);
+    cdef void @type|generic_to_qr_mumps_type@qrm_residual_norm_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, @type|generic_to_c_type@ *b, 
+                                  @type|generic_to_c_type@ *x, const int nrhs, @type|generic_to_c_single_double_type@ *nrm);
+    cdef void @type|generic_to_qr_mumps_type@qrm_residual_orth_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, @type|generic_to_c_type@ *r, 
+                                  const int nrhs, @type|generic_to_c_single_double_type@ *nrm);
     
     cdef void qrm_gseti_c(const char *string, int val);
     cdef void qrm_ggeti_c(const char *string, int *val);
     cdef void qrm_ggetii_c(const char *string, long long *val);
     
-    cdef void @type|numpy_to_qr_mumps_type@qrm_pseti_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char *string, int val);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_pgeti_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char *string, int *val);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_pgetii_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char *string, long long *val);
+    cdef void @type|generic_to_qr_mumps_type@qrm_pseti_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char *string, int val);
+    cdef void @type|generic_to_qr_mumps_type@qrm_pgeti_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char *string, int *val);
+    cdef void @type|generic_to_qr_mumps_type@qrm_pgetii_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char *string, long long *val);
     cdef void qrm_err_check_c();
     
     cdef enum icntl:
@@ -103,9 +103,9 @@ cdef extern from "@type|numpy_to_qr_mumps_type@qrm_mumps.h":
         qrm_yes_=1
     
 
-cdef c_to_fortran_index_array(@index|numpy_to_c@ * a, @index|numpy_to_c@ a_size):
+cdef c_to_fortran_index_array(@index|generic_to_c_type@ * a, @index|generic_to_c_type@ a_size):
     cdef:
-        @index|numpy_to_c@ i
+        @index|generic_to_c_type@ i
 
     for i from 0 <= i < a_size:
         a[i] += 1
@@ -176,7 +176,7 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
     the methods of this class as their corresponding counter-parts in QR_MUMPS.
     """
 
-    def __cinit__(self, @index|numpy_to_c@ m, @index|numpy_to_c@ n, @index|numpy_to_c@ nnz, verbose=False):
+    def __cinit__(self, @index|generic_to_c_type@ m, @index|generic_to_c_type@ n, @index|generic_to_c_type@ nnz, verbose=False):
         """
         Args:
             m: number of lines of matrix A
@@ -189,7 +189,7 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         self.nnz = nnz
 
         # Initialize QR_MUMPS internal structure 
-        @type|numpy_to_qr_mumps_type@qrm_spmat_init_c(&self.params)
+        @type|generic_to_qr_mumps_type@qrm_spmat_init_c(&self.params)
 
         self.params.m = self.nrow
         self.params.n = self.ncol
@@ -229,7 +229,7 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
 
     def __dealloc__(self):
         # autodestruct qr_mumps internal
-        @type|numpy_to_qr_mumps_type@qrm_spmat_destroy_c(&self.params)
+        @type|generic_to_qr_mumps_type@qrm_spmat_destroy_c(&self.params)
 
     # Properties
     property analyzed:
@@ -242,6 +242,9 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         def __get__(self): return self.ncol
     property nnz:
         def __get__(self): return self.nnz
+    property transp:
+        def __get__(self): return self.transp
+        def __set__(self, value): self.transp = value
     property gstats:
         def __get__(self): return self.params.gstats
     property analysis_statistics:
@@ -272,10 +275,10 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
             return
 
         # Set ordering option
-        @type|numpy_to_qr_mumps_type@qrm_pseti_c(&self.params, "qrm_ordering", orderings[ordering])
+        @type|generic_to_qr_mumps_type@qrm_pseti_c(&self.params, "qrm_ordering", orderings[ordering])
 
         t1 = time.clock()
-        @type|numpy_to_qr_mumps_type@qrm_analyse_c(&self.params, self.transp)
+        @type|generic_to_qr_mumps_type@qrm_analyse_c(&self.params, self.transp)
         t2 = time.clock()
 
         self.analyzed = True
@@ -317,7 +320,7 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
             self.analyze(ordering=ordering)
 
         t1 = time.clock()
-        @type|numpy_to_qr_mumps_type@qrm_factorize_c(&self.params, self.transp)
+        @type|generic_to_qr_mumps_type@qrm_factorize_c(&self.params, self.transp)
         t2 = time.clock()
 
         self.factorized = True
@@ -360,22 +363,22 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
                              "and rhs is of size (%d,%d)"%(self.nrow, self.ncol, rhs_shape[0], nrhs))
 
         if self.transp=='n':
-            @type|numpy_to_qr_mumps_type@qrm_apply_c(&self.params, 't', <@type|numpy_to_c@ *> cnp.PyArray_DATA(b), nrhs);
-            @type|numpy_to_qr_mumps_type@qrm_solve_c(&self.params, 'n', <@type|numpy_to_c@ *> cnp.PyArray_DATA(b), <@type|numpy_to_c@ *> cnp.PyArray_DATA(x), nrhs);
+            @type|generic_to_qr_mumps_type@qrm_apply_c(&self.params, 't', <@type|generic_to_c_type@ *> cnp.PyArray_DATA(b), nrhs);
+            @type|generic_to_qr_mumps_type@qrm_solve_c(&self.params, 'n', <@type|generic_to_c_type@ *> cnp.PyArray_DATA(b), <@type|generic_to_c_type@ *> cnp.PyArray_DATA(x), nrhs);
         elif self.transp=='t':
-            @type|numpy_to_qr_mumps_type@qrm_solve_c(&self.params, 't', <@type|numpy_to_c@ *> cnp.PyArray_DATA(b), <@type|numpy_to_c@ *> cnp.PyArray_DATA(x), nrhs);
-            @type|numpy_to_qr_mumps_type@qrm_apply_c(&self.params, 'n', <@type|numpy_to_c@ *> cnp.PyArray_DATA(x), nrhs);
+            @type|generic_to_qr_mumps_type@qrm_solve_c(&self.params, 't', <@type|generic_to_c_type@ *> cnp.PyArray_DATA(b), <@type|generic_to_c_type@ *> cnp.PyArray_DATA(x), nrhs);
+            @type|generic_to_qr_mumps_type@qrm_apply_c(&self.params, 'n', <@type|generic_to_c_type@ *> cnp.PyArray_DATA(x), nrhs);
 
 
         # compute residuals if requested
         if compute_residuals:
             residuals = np.asfortranarray(rhs.copy())
-            residual_norm = np.zeros(nrhs, dtype=np.@type|numpy_to_single_double@)
-            @type|numpy_to_qr_mumps_type@qrm_residual_norm_c(&self.params,
-                                                             <@type|numpy_to_c@ *> cnp.PyArray_DATA(residuals),
-                                                             <@type|numpy_to_c@ *> cnp.PyArray_DATA(x),
+            residual_norm = np.zeros(nrhs, dtype=np.@type|generic_to_single_double_type@)
+            @type|generic_to_qr_mumps_type@qrm_residual_norm_c(&self.params,
+                                                             <@type|generic_to_c_type@ *> cnp.PyArray_DATA(residuals),
+                                                             <@type|generic_to_c_type@ *> cnp.PyArray_DATA(x),
                                                              nrhs,
-                                                             <@type|numpy_to_c_single_double@ *>cnp.PyArray_DATA(residual_norm))
+                                                             <@type|generic_to_c_single_double_type@ *>cnp.PyArray_DATA(residual_norm))
             return (x, residuals, residual_norm)
         else:
             return x
@@ -404,7 +407,7 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
                              "Attempting to solve the linear system, where A is of size (%d, %d) "
                              "and rhs is of size (%d,%d)"%(self.nrow, self.ncol, rhs_shape[0], nrhs))
 
-        @type|numpy_to_qr_mumps_type@qrm_least_squares_c(&self.params, <@type|numpy_to_c@ *> cnp.PyArray_DATA(b), <@type|numpy_to_c@ *> cnp.PyArray_DATA(x), nrhs)
+        @type|generic_to_qr_mumps_type@qrm_least_squares_c(&self.params, <@type|generic_to_c_type@ *> cnp.PyArray_DATA(b), <@type|generic_to_c_type@ *> cnp.PyArray_DATA(x), nrhs)
         return x
 
     def minimum_norm(self, rhs):
@@ -430,11 +433,11 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
                              "Attempting to solve the linear system, where A is of size (%d, %d) "
                              "and rhs is of size (%d,%d)"%(self.nrow, self.ncol, rhs_shape[0], nrhs))
 
-        @type|numpy_to_qr_mumps_type@qrm_min_norm_c(&self.params, <@type|numpy_to_c@ *> cnp.PyArray_DATA(b), <@type|numpy_to_c@ *> cnp.PyArray_DATA(x), nrhs)
+        @type|generic_to_qr_mumps_type@qrm_min_norm_c(&self.params, <@type|generic_to_c_type@ *> cnp.PyArray_DATA(b), <@type|generic_to_c_type@ *> cnp.PyArray_DATA(x), nrhs)
         return x
 
 
-    cpdef cnp.ndarray[cnp.@type|lower@_t] refine(self, cnp.ndarray[cnp.@type|lower@_t] x, cnp.ndarray[cnp.@type|lower@_t] rhs, @index|numpy_to_c@ niter):
+    cpdef cnp.ndarray[cnp.@type|lower@_t] refine(self, cnp.ndarray[cnp.@type|lower@_t] x, cnp.ndarray[cnp.@type|lower@_t] rhs, @index|generic_to_c_type@ niter):
         """
         Let x be the initial solution of Ax = b
         Compute residual r = b - Ax
@@ -470,18 +473,18 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         assert(nx, nrhs)
 
         for i in xrange(0,niter):
-            @type|numpy_to_qr_mumps_type@qrm_matmul_c(&self.params, 'n', <@type|numpy_to_c_single_double@> -1,
-                                                      <@type|numpy_to_c@ *> cnp.PyArray_DATA(new_x), 
-                                                      <@type|numpy_to_c_single_double@> 1,
-                                                      <@type|numpy_to_c@ *> cnp.PyArray_DATA(residuals),
+            @type|generic_to_qr_mumps_type@qrm_matmul_c(&self.params, 'n', <@type|generic_to_c_single_double_type@> -1,
+                                                      <@type|generic_to_c_type@ *> cnp.PyArray_DATA(new_x), 
+                                                      <@type|generic_to_c_single_double_type@> 1,
+                                                      <@type|generic_to_c_type@ *> cnp.PyArray_DATA(residuals),
                                                       nrhs)
 
             if self.transp=='n':
-                @type|numpy_to_qr_mumps_type@qrm_apply_c(&self.params, 't', <@type|numpy_to_c@ *> cnp.PyArray_DATA(residuals), nrhs);
-                @type|numpy_to_qr_mumps_type@qrm_solve_c(&self.params, 'n', <@type|numpy_to_c@ *> cnp.PyArray_DATA(residuals), <@type|numpy_to_c@ *> cnp.PyArray_DATA(new_x), nrhs);
+                @type|generic_to_qr_mumps_type@qrm_apply_c(&self.params, 't', <@type|generic_to_c_type@ *> cnp.PyArray_DATA(residuals), nrhs);
+                @type|generic_to_qr_mumps_type@qrm_solve_c(&self.params, 'n', <@type|generic_to_c_type@ *> cnp.PyArray_DATA(residuals), <@type|generic_to_c_type@ *> cnp.PyArray_DATA(new_x), nrhs);
             elif self.transp=='t':
-                @type|numpy_to_qr_mumps_type@qrm_solve_c(&self.params, 't', <@type|numpy_to_c@ *> cnp.PyArray_DATA(residuals), <@type|numpy_to_c@ *> cnp.PyArray_DATA(new_x), nrhs);
-                @type|numpy_to_qr_mumps_type@qrm_apply_c(&self.params, 'n', <@type|numpy_to_c@ *> cnp.PyArray_DATA(new_x), nrhs);
+                @type|generic_to_qr_mumps_type@qrm_solve_c(&self.params, 't', <@type|generic_to_c_type@ *> cnp.PyArray_DATA(residuals), <@type|generic_to_c_type@ *> cnp.PyArray_DATA(new_x), nrhs);
+                @type|generic_to_qr_mumps_type@qrm_apply_c(&self.params, 'n', <@type|generic_to_c_type@ *> cnp.PyArray_DATA(new_x), nrhs);
 
             new_x = x + new_x
             x = new_x.copy()

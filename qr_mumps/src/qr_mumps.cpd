@@ -1,10 +1,10 @@
 cimport numpy as cnp
 
-cdef extern from "@type|numpy_to_qr_mumps_type@qrm_mumps.h":
-    cdef struct @type|numpy_to_qr_mumps_type@qrm_spmat_type_c:
+cdef extern from "@type|generic_to_qr_mumps_type@qrm_mumps.h":
+    cdef struct @type|generic_to_qr_mumps_type@qrm_spmat_type_c:
         int          *irn
         int          *jcn
-        @type|numpy_to_c@ *val
+        @type|generic_to_c_type@ *val
         int          m, n, nz
         int          *cperm_in
         int          icntl[20]
@@ -14,39 +14,39 @@ cdef extern from "@type|numpy_to_qr_mumps_type@qrm_mumps.h":
     
     
     cdef double qrm_swtime();
-    cdef void @type|numpy_to_qr_mumps_type@qrm_spmat_init_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_spmat_destroy_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_readmat_c(char *matfile, @type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_analyse_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char transp);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_factorize_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char transp);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_solve_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char transp,
-                          @type|numpy_to_c@ *b, @type|numpy_to_c@ *x, const int nrhs);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_apply_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char transp,
-                          @type|numpy_to_c@ *b, const int nrhs);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_matmul_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char transp,
-                          const @type|numpy_to_c@ alpha, @type|numpy_to_c@ *x, 
-                          const @type|numpy_to_c@ beta, @type|numpy_to_c@ *y, 
+    cdef void @type|generic_to_qr_mumps_type@qrm_spmat_init_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c);
+    cdef void @type|generic_to_qr_mumps_type@qrm_spmat_destroy_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c);
+    cdef void @type|generic_to_qr_mumps_type@qrm_readmat_c(char *matfile, @type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c);
+    cdef void @type|generic_to_qr_mumps_type@qrm_analyse_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char transp);
+    cdef void @type|generic_to_qr_mumps_type@qrm_factorize_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char transp);
+    cdef void @type|generic_to_qr_mumps_type@qrm_solve_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char transp,
+                          @type|generic_to_c_type@ *b, @type|generic_to_c_type@ *x, const int nrhs);
+    cdef void @type|generic_to_qr_mumps_type@qrm_apply_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char transp,
+                          @type|generic_to_c_type@ *b, const int nrhs);
+    cdef void @type|generic_to_qr_mumps_type@qrm_matmul_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char transp,
+                          const @type|generic_to_c_type@ alpha, @type|generic_to_c_type@ *x, 
+                          const @type|generic_to_c_type@ beta, @type|generic_to_c_type@ *y, 
                           const int nrhs);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_matnrm_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char ntype, 
-                          @type|numpy_to_c_single_double@ *nrm);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_vecnrm_c(const @type|numpy_to_c@ *x, const int n, const int nrhs, 
-                          const char ntype, @type|numpy_to_c_single_double@ *nrm);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_least_squares_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, @type|numpy_to_c@ *b, 
-                          @type|numpy_to_c@ *x, const int nrhs);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_min_norm_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, @type|numpy_to_c@ *b, 
-                                  @type|numpy_to_c@ *x, const int nrhs);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_residual_norm_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, @type|numpy_to_c@ *b, 
-                                  @type|numpy_to_c@ *x, const int nrhs, @type|numpy_to_c_single_double@ *nrm);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_residual_orth_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, @type|numpy_to_c@ *r, 
-                                  const int nrhs, @type|numpy_to_c_single_double@ *nrm);
+    cdef void @type|generic_to_qr_mumps_type@qrm_matnrm_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char ntype, 
+                          @type|generic_to_c_single_double_type@ *nrm);
+    cdef void @type|generic_to_qr_mumps_type@qrm_vecnrm_c(const @type|generic_to_c_type@ *x, const int n, const int nrhs, 
+                          const char ntype, @type|generic_to_c_single_double_type@ *nrm);
+    cdef void @type|generic_to_qr_mumps_type@qrm_least_squares_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, @type|generic_to_c_type@ *b, 
+                          @type|generic_to_c_type@ *x, const int nrhs);
+    cdef void @type|generic_to_qr_mumps_type@qrm_min_norm_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, @type|generic_to_c_type@ *b, 
+                                  @type|generic_to_c_type@ *x, const int nrhs);
+    cdef void @type|generic_to_qr_mumps_type@qrm_residual_norm_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, @type|generic_to_c_type@ *b, 
+                                  @type|generic_to_c_type@ *x, const int nrhs, @type|generic_to_c_single_double_type@ *nrm);
+    cdef void @type|generic_to_qr_mumps_type@qrm_residual_orth_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, @type|generic_to_c_type@ *r, 
+                                  const int nrhs, @type|generic_to_c_single_double_type@ *nrm);
     
     cdef void qrm_gseti_c(const char *string, int val);
     cdef void qrm_ggeti_c(const char *string, int *val);
     cdef void qrm_ggetii_c(const char *string, long long *val);
     
-    cdef void @type|numpy_to_qr_mumps_type@qrm_pseti_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char *string, int val);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_pgeti_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char *string, int *val);
-    cdef void @type|numpy_to_qr_mumps_type@qrm_pgetii_c(@type|numpy_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char *string, long long *val);
+    cdef void @type|generic_to_qr_mumps_type@qrm_pseti_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char *string, int val);
+    cdef void @type|generic_to_qr_mumps_type@qrm_pgeti_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char *string, int *val);
+    cdef void @type|generic_to_qr_mumps_type@qrm_pgetii_c(@type|generic_to_qr_mumps_type@qrm_spmat_type_c *qrm_spmat_c, const char *string, long long *val);
     cdef void qrm_err_check_c();
     
     cdef enum icntl:
@@ -101,7 +101,7 @@ cdef class FactorizationStatistics:
         double time
 
 
-cdef c_to_fortran_index_array(@index|numpy_to_c@ * a, @index|numpy_to_c@ a_size)
+cdef c_to_fortran_index_array(@index|generic_to_c_type@ * a, @index|generic_to_c_type@ a_size)
 
 cdef class BaseQRMUMPSSolver_@index@_@type@:
     cdef:
@@ -111,7 +111,7 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
         int nnz
 
         # QR_MUMPS internal structure
-        @type|numpy_to_qr_mumps_type@qrm_spmat_type_c params
+        @type|generic_to_qr_mumps_type@qrm_spmat_type_c params
  
         char transp 
 
@@ -127,4 +127,4 @@ cdef class BaseQRMUMPSSolver_@index@_@type@:
 
     cdef index_to_fortran(self)
 
-    cpdef cnp.ndarray[cnp.@type|lower@_t] refine(self, cnp.ndarray[cnp.@type|lower@_t] x, cnp.ndarray[cnp.@type|lower@_t] rhs, @index|numpy_to_c@ niter)
+    cpdef cnp.ndarray[cnp.@type|lower@_t] refine(self, cnp.ndarray[cnp.@type|lower@_t] x, cnp.ndarray[cnp.@type|lower@_t] rhs, @index|generic_to_c_type@ niter)

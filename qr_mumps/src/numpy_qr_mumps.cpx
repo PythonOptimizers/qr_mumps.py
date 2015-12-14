@@ -21,7 +21,7 @@ cdef class NumpyQRMUMPSSolver_@index@_@type@(BaseQRMUMPSSolver_@index@_@type@):
     Warning: if the numpy arrays are modified externally by the user between
     two calls to solve, the changes in arrays won't be passed to QR_MUMPS.
     """
-    def __cinit__(self, @index|numpy_to_c@ m, @index|numpy_to_c@ n, @index|numpy_to_c@ nnz, verbose=False):
+    def __cinit__(self, @index|generic_to_c_type@ m, @index|generic_to_c_type@ n, @index|generic_to_c_type@ nnz, verbose=False):
         pass
 
     def __dealloc__(self):
@@ -40,13 +40,13 @@ cdef class NumpyQRMUMPSSolver_@index@_@type@(BaseQRMUMPSSolver_@index@_@type@):
         Note: we keep the same name for this method in all derived classes.
         """
         # allocate memory for irn and jcn
-        self.params.irn = <@index|numpy_to_c@ *> PyMem_Malloc(self.nnz * sizeof(@index|numpy_to_c@))
-        self.params.jcn = <@index|numpy_to_c@ *> PyMem_Malloc(self.nnz * sizeof(@index|numpy_to_c@))
+        self.params.irn = <@index|generic_to_c_type@ *> PyMem_Malloc(self.nnz * sizeof(@index|generic_to_c_type@))
+        self.params.jcn = <@index|generic_to_c_type@ *> PyMem_Malloc(self.nnz * sizeof(@index|generic_to_c_type@))
 
-        memcpy(self.params.irn, <@index|numpy_to_c@ *> cnp.PyArray_DATA(arow), self.nnz*sizeof(@index|numpy_to_c@))
-        memcpy(self.params.jcn, <@index|numpy_to_c@ *> cnp.PyArray_DATA(acol), self.nnz*sizeof(@index|numpy_to_c@))
+        memcpy(self.params.irn, <@index|generic_to_c_type@ *> cnp.PyArray_DATA(arow), self.nnz*sizeof(@index|generic_to_c_type@))
+        memcpy(self.params.jcn, <@index|generic_to_c_type@ *> cnp.PyArray_DATA(acol), self.nnz*sizeof(@index|generic_to_c_type@))
 
-        self.params.val = <@type|numpy_to_c@ *> cnp.PyArray_DATA(aval)
+        self.params.val = <@type|generic_to_c_type@ *> cnp.PyArray_DATA(aval)
 
         # convert irn and jcn indices to Fortran format
         self.index_to_fortran()

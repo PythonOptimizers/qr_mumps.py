@@ -1,12 +1,16 @@
 from qr_mumps.solver import QRMUMPSSolver
 
 import numpy as np
-import sys
-import sys, traceback
 
 m = 5
 n = 7
-A = np.array([[0,0.1,0,0,0], [0.7,0,0.3,0.5,0.1], [0.6,0,0,0.2,0], [0,0,0.6,0,0.6], [0,0,0.7,0,0], [0.4,0.1,0,0,0], [0,0,0.2,0,0]], dtype=np.float64)
+A = np.array([[0, 0.1, 0, 0, 0],
+              [0.7, 0, 0.3, 0.5, 0.1],
+              [0.6, 0, 0, 0.2, 0],
+              [0, 0, 0.6, 0, 0.6],
+              [0, 0, 0.7, 0, 0],
+              [0.4, 0.1, 0, 0, 0],
+              [0, 0, 0.2, 0, 0]], dtype=np.float64)
 A = A.T
 arow = np.array([0,0,0,1,1,2,2,2,2,3,3,4,4], dtype=np.int32)
 acol = np.array([1,2,5,0,5,1,3,4,6,1,2,1,3], dtype=np.int32)
@@ -14,23 +18,24 @@ aval = np.array([0.7,0.6,0.4,0.1,0.1,0.3,0.6,0.7,0.2,0.5,0.2,0.1,0.6], dtype=np.
 print A
 
 for i in xrange(0,1):
+
     solver = QRMUMPSSolver((m, n, arow, acol, aval), verbose=False)
     print "i:", i
 
-    #solver.analyze('metis')
-    #print solver.analysis_statistics
+    # solver.analyze('metis')
+    # print solver.analysis_statistics
 
     # print solver.analyzed
-    
+
     solver.factorize('scotch')
     print solver.factorization_statistics
-    
+
     e = np.ones(n, dtype=np.float64)
     rhs = np.dot(A, e)
-    
-    
+
+
     x = solver.solve(rhs)
-    #np.testing.assert_almost_equal(x,e)
+    # np.testing.assert_almost_equal(x,e)
     print e, x
     print np.dot(A, x), rhs
 

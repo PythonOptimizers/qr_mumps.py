@@ -1,5 +1,5 @@
 from cysparse.sparse.ll_mat_matrices.ll_mat_@index@_t_@type@_t cimport LLSparseMatrix_@index@_t_@type@_t
-from cysparse.types.cysparse_types cimport *
+from cysparse.cysparse_types.cysparse_types cimport *
 
 from qr_mumps.src.qr_mumps_@index@_@type@ cimport BaseQRMUMPSSolver_@index@_@type@, c_to_fortran_index_array
 
@@ -42,13 +42,13 @@ cdef class CySparseQRMUMPSSolver_@index@_@type@(BaseQRMUMPSSolver_@index@_@type@
         Note: we keep the same name for this method in all derived classes.
         """
         # allocate memory for irn and jcn
-        self.params.irn = <@index|numpy_to_c@ *> PyMem_Malloc(self.nnz * sizeof(@index|numpy_to_c@))
-        self.params.jcn = <@index|numpy_to_c@ *> PyMem_Malloc(self.nnz * sizeof(@index|numpy_to_c@))
+        self.params.irn = <@index|generic_to_c_type@ *> PyMem_Malloc(self.nnz * sizeof(@index|generic_to_c_type@))
+        self.params.jcn = <@index|generic_to_c_type@ *> PyMem_Malloc(self.nnz * sizeof(@index|generic_to_c_type@))
 
 {% if type in complex_list %} 
         a_val = <@type@_t *> PyMem_Malloc(self.nnz * sizeof(@type@_t))
         A.take_triplet_pointers(self.params.irn, self.params.jcn, a_val)
-        self.params.val = <@type|numpy_to_c@ *> a_val
+        self.params.val = <@type|generic_to_c_type@ *> a_val
 {% else %}
         self.params.val = <@type@_t *> PyMem_Malloc(self.nnz * sizeof(@type@_t))
         A.take_triplet_pointers(self.params.irn, self.params.jcn, self.params.val)

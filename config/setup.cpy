@@ -18,9 +18,35 @@ import copy
 from codecs import open
 from os import path
 
-########################################################################################################################
-# INIT
-########################################################################################################################
+# HELPERS
+#--------
+def prepare_Cython_extensions_as_C_extensions(extensions):
+    """
+    Modify the list of sources to transform `Cython` extensions into `C` extensions.
+    Args:
+        extensions: A list of (`Cython`) `distutils` extensions.
+    Warning:
+        The extensions are changed in place. This function is not compatible with `C++` code.
+    Note:
+        Only `Cython` source files are modified into their `C` equivalent source files. Other file types are unchanged.
+    """
+    for extension in extensions:
+        c_sources = list()
+        for source_path in extension.sources:
+            path, source = os.path.split(source_path)
+            filename, ext = os.path.splitext(source)
+
+            if ext == '.pyx':
+                c_sources.append(os.path.join(path, filename + '.c'))
+            elif ext in ['.pxd', '.pxi']:
+                pass
+            else:
+                # copy source as is
+                c_sources.append(source_path)
+
+        # modify extension in place
+        extension.sources = c_sources
+
 qr_mumps_config = ConfigParser.SafeConfigParser()
 qr_mumps_config.read('site.cfg')
 
@@ -31,12 +57,24 @@ with open("qr_mumps/version.py") as fp:
 
 numpy_include = np.get_include()
 
+# Use Cython?
+use_cython = qr_mumps_config.getboolean('CODE_GENERATION', 'use_cython')
+if use_cython:
+    try:
+        from Cython.Distutils import build_ext
+        from Cython.Build import cythonize
+    except ImportError:
+        raise ImportError("Check '%s': Cython is not properly installed." % mumps_config_file)
+
 # DEFAULT
 default_include_dir = qr_mumps_config.get('DEFAULT', 'include_dirs').split(os.pathsep)
 default_library_dir = qr_mumps_config.get('DEFAULT', 'library_dirs').split(os.pathsep)
 
 # qr_mumps
 qr_mumps_compiled_in_64bits = qr_mumps_config.getboolean('QR_MUMPS', 'qr_mumps_compiled_in_64bits')
+
+# Debug mode
+use_debug_symbols = qr_mumps_config.getboolean('CODE_GENERATION', 'use_debug_symbols')
 
 # find user defined directories
 qr_mumps_include_dirs = qr_mumps_config.get('QR_MUMPS', 'include_dirs').split(os.pathsep)
@@ -63,11 +101,12 @@ include_dirs = [numpy_include, '.']
 
 ext_params = {}
 ext_params['include_dirs'] = include_dirs
-# -Wno-unused-function is potentially dangerous... use with care!
-# '-DNPY_NO_DEPRECATED_API=NPY_1_7_API_VERSION': doesn't work with Cython... because it **does** use a deprecated version...
-ext_params['extra_compile_args'] = ["-O2", '-std=c99', '-Wno-unused-function']
-ext_params['extra_link_args'] = []
-
+if not use_debug_symbols:
+    ext_params['extra_compile_args'] = ["-O2", '-std=c99', '-Wno-unused-function']
+    ext_params['extra_link_args'] = []
+else:
+    ext_params['extra_compile_args'] = ["-g", '-std=c99', '-Wno-unused-function']
+    ext_params['extra_link_args'] = ["-g"]
 
 context_ext_params = copy.deepcopy(ext_params)
 qr_mumps_ext = []
@@ -77,7 +116,7 @@ base_ext_params_@index_type@_@element_type@ = copy.deepcopy(ext_params)
 base_ext_params_@index_type@_@element_type@['include_dirs'].extend(qr_mumps_include_dirs)
 base_ext_params_@index_type@_@element_type@['library_dirs'] = qr_mumps_library_dirs
 base_ext_params_@index_type@_@element_type@['libraries'] = [] # 'scalapack', 'pord']
-base_ext_params_@index_type@_@element_type@['libraries'].append('@element_type|numpy_to_qr_mumps_type@qrm')
+base_ext_params_@index_type@_@element_type@['libraries'].append('@element_type|generic_to_qr_mumps_type@qrm')
 base_ext_params_@index_type@_@element_type@['libraries'].append('qrm_common')
 qr_mumps_ext.append(Extension(name="qr_mumps.src.qr_mumps_@index_type@_@element_type@",
                 sources=['qr_mumps/src/qr_mumps_@index_type@_@element_type@.pxd',
@@ -112,6 +151,12 @@ if build_cysparse_ext:
 packages_list = ['qr_mumps', 'qr_mumps.src', 'tests']
 
 
+# PACKAGE PREPARATION FOR EXCLUSIVE C EXTENSIONS
+########################################################################################################################
+# We only use the C files **without** Cython. In fact, Cython doesn't need to be installed.
+if not use_cython:
+    prepare_Cython_extensions_as_C_extensions(qr_mumps_ext)
+
 CLASSIFIERS = """\
 Development Status :: 4 - Beta
 Intended Audience :: Science/Research
@@ -143,7 +188,7 @@ setup(name=  'qr_mumps.py',
 {% endraw %}
       maintainer = "qr_mumps.py Developers",
 {% raw %}
-      maintainer_email = "dominique.orban@gerad.ca",
+      maintainer_email = "sylvain.arreckx@gmail.com",
 {% endraw %}
       summary = "A python interface to qr_mumps",
       url = "https://github.com/optimizers/qr_mumps",
