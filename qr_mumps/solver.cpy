@@ -37,26 +37,28 @@ allowed_types = '\titype:
     {%- endif -%}
 {%- endfor -%}
 \n'
-type_error_msg = 'Matrix has an index and/or element type that is incompatible with qr_mumps\nAllowed types:\n%s' % allowed_types
+type_error_msg = 'Matrix has an index and/or element type that is incompatible \n'
+type_error_msg += 'with qr_mumps\nAllowed types:\n%s' % allowed_types
 
 def QRMUMPSSolver(arg1, verbose=False):
     """
     Create and return the right qr_mumps solver based on the element type
     supplied as input.
 
-    qr_mumps ("MUltifrontal Massively Parallel Solver") is a package for solving systems
-    of linear equations of the form Ax = b, where A is a square **sparse** matrix that can be
-    either unsymmetric, symmetric positive definite, or general symmetric, on distributed
-    memory computers. 
-    
+    qr_mumps ("MUltifrontal Massively Parallel Solver") is a package for solving
+    systems of linear equations of the form Ax = b,
+    where A is a square **sparse** matrix that can be either unsymmetric,
+    symmetric positive definite, or general symmetric, on distributed memory
+    computers.
+
     qr_mumps performs a Gaussian factorization
       A = LU
     where L is a lower triangular matrix and U an upper triangular matrix.
 
     If the matrix is symmetric then qr_mumps performs the factorization
-      A = LDL^T 
+      A = LDL^T
     where D is block diagonal matrix.
-    
+
     Args:
         m: number of line of matrix A
         n: number of column of matrix A
@@ -87,7 +89,7 @@ def QRMUMPSSolver(arg1, verbose=False):
         {% else %}
             elif dtype == np.@element_type|lower@:
         {% endif %}
-                solver = NumpyQRMUMPSSolver_@index_type@_@element_type@(m, n, a_row.size, verbose=verbose)
+           solver = NumpyQRMUMPSSolver_@index_type@_@element_type@(m, n, a_row.size, verbose=verbose)
                 solver.get_matrix_data(a_row, a_col, a_val)
                 return solver
       {% endfor %}
@@ -99,7 +101,7 @@ def QRMUMPSSolver(arg1, verbose=False):
         {% else %}
             elif dtype == np.@element_type|lower@:
         {% endif %}
-                solver = NumpyQRMUMPSSolver_@index_type@_@element_type@(m, n, a_row.size, verbose=verbose)
+           solver = NumpyQRMUMPSSolver_@index_type@_@element_type@(m, n, a_row.size, verbose=verbose)
                 solver.get_matrix_data(a_row, a_col, a_val)
                 return solver
       {% endfor %}
@@ -128,7 +130,7 @@ def QRMUMPSSolver(arg1, verbose=False):
         {% else %}
             elif dtype == @element_type@_T:
         {% endif %}
-                solver = CySparseQRMUMPSSolver_@index_type@_@element_type@(m, n, A.nnz, verbose=verbose)
+           solver = CySparseQRMUMPSSolver_@index_type@_@element_type@(m, n, A.nnz, verbose=verbose)
                 solver.get_matrix_data(A)
                 return solver
     {% endfor %}
@@ -140,7 +142,7 @@ def QRMUMPSSolver(arg1, verbose=False):
         {% else %}
             elif dtype == @element_type@_T:
         {% endif %}
-                solver = CySparseQRMUMPSSolver_@index_type@_@element_type@(m, n, A.nnz, verbose=verbose)
+           solver = CySparseQRMUMPSSolver_@index_type@_@element_type@(m, n, A.nnz, verbose=verbose)
                 solver.get_matrix_data(A)
                 return solver
     {% endfor %}

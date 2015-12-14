@@ -15,6 +15,7 @@
 #
 ################################################################################
 from cygenja.generator import Generator
+from jinja2 import Environment, FileSystemLoader
 
 import os
 import sys
@@ -36,7 +37,8 @@ def make_parser():
     Returns:
         The command line parser.
     """
-    parser = argparse.ArgumentParser(description='%s: a code generator' % os.path.basename(sys.argv[0]))
+    basename = os.path.basename(sys.argv[0])
+    parser = argparse.ArgumentParser(description='%s: a code generator' % basename)
 
     parser.add_argument("-r", "--recursive", help="Act recursively",
                         action='store_true', required=False)
@@ -86,7 +88,7 @@ ELEMENT_TYPES = COMPLEX_ELEMENT_TYPES + REAL_ELEMENT_TYPES
 
 GENERAL_CONTEXT = {'index_list': INDEX_TYPES,
                    'type_list': ELEMENT_TYPES,
-                   'complex_list' : COMPLEX_ELEMENT_TYPES}
+                   'complex_list': COMPLEX_ELEMENT_TYPES}
 
 
 # ACTION FUNCTION
@@ -157,6 +159,16 @@ def generic_to_c_single_double_type(generic_type):
         raise TypeError("Not a recognized generic type")
 
 
+# JINJA 2 environment
+GENERAL_ENVIRONMENT = Environment(
+    autoescape=False,
+    loader=FileSystemLoader('/'),  # we use absolute filenames
+    trim_blocks=True,
+    lstrip_blocks=True,
+    variable_start_string='@',
+    variable_end_string='@')
+
+
 # LOGGER
 LOG_LEVELS = {
     'DEBUG': logging.DEBUG,
@@ -174,9 +186,12 @@ def create_logger(mumps_config):
     logger = logging.getLogger(logger_name)
 
     # levels
-    log_level = LOG_LEVELS[mumps_config.get('CODE_GENERATION', 'log_level')]
-    console_log_level = LOG_LEVELS[mumps_config.get('CODE_GENERATION', 'console_log_level')]
-    file_log_level = LOG_LEVELS[mumps_config.get('CODE_GENERATION', 'file_log_level')]
+    log_level = LOG_LEVELS[mumps_config.get('CODE_GENERATION',
+                                            'log_level')]
+    console_log_level = LOG_LEVELS[mumps_config.get('CODE_GENERATION',
+                                                    'console_log_level')]
+    file_log_level = LOG_LEVELS[mumps_config.get('CODE_GENERATION',
+                                                 'file_log_level')]
 
     logger.setLevel(log_level)
 
@@ -218,7 +233,9 @@ if __name__ == "__main__":
 
     # cygenja engine
     current_directory = os.path.dirname(os.path.abspath(__file__))
-    cygenja_engine = Generator(current_directory, logger=logger)
+    cygenja_engine = Generator(current_directory,
+                               GENERAL_ENVIRONMENT,
+                               logger=logger)
 
     # register filters
     cygenja_engine.register_filter('generic_to_qr_mumps_type',
@@ -242,14 +259,6 @@ if __name__ == "__main__":
                                    single_generation)
     cygenja_engine.register_action('qr_mumps/src', '*.*',
                                    generate_following_index_and_element)
-
-    # GENERAL_ENVIRONMENT = Environment(
-    #    autoescape=False,
-    #    loader=FileSystemLoader('/'), # we use absolute filenames
-    #    trim_blocks=True,
-    #    lstrip_blocks=True,
-    #    variable_start_string='@',
-    #    variable_end_string='@')
 
     # Generation
     if arg_options.dry_run:
