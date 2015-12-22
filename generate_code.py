@@ -40,21 +40,13 @@ def make_parser():
     basename = os.path.basename(sys.argv[0])
     parser = argparse.ArgumentParser(description='%s: a code generator' % basename)
 
-    parser.add_argument("-r", "--recursive", help="Act recursively",
-                        action='store_true', required=False)
-    parser.add_argument("-a", "--all", help="Create all action files",
-                        action='store_true', required=False)
-    parser.add_argument("-s", "--setup", help="Create setup file",
-                        action='store_true', required=False)
-    parser.add_argument("-t", "--tests", help="Create generic tests",
-                        action='store_true', required=False)
     parser.add_argument("-c", "--clean", help="Clean action files",
-                        action='store_true', required=False)
-    parser.add_argument("-u", "--untrack", help="Untrack files from git",
                         action='store_true', required=False)
     parser.add_argument("-d", "--dry_run", help="Dry run: no action is taken",
                         action='store_true', required=False)
     parser.add_argument("-f", "--force", help="Force generation no matter what",
+                        action='store_true', required=False)
+    parser.add_argument("-u", "--untrack", help="Untrack files from git",
                         action='store_true', required=False)
     parser.add_argument('dir_pattern', nargs='?', default='.',
                         help='Glob pattern')
@@ -265,19 +257,19 @@ if __name__ == "__main__":
         cygenja_engine.generate(arg_options.dir_pattern,
                                 arg_options.file_pattern,
                                 action_ch='d',
-                                recursively=arg_options.recursive,
+                                recursively=True,
                                 force=arg_options.force)
     elif arg_options.clean:
         cygenja_engine.generate(arg_options.dir_pattern,
                                 arg_options.file_pattern,
                                 action_ch='c',
-                                recursively=arg_options.recursive,
+                                recursively=True,
                                 force=arg_options.force)
     else:
         cygenja_engine.generate(arg_options.dir_pattern,
                                 arg_options.file_pattern,
                                 action_ch='g',
-                                recursively=arg_options.recursive,
+                                recursively=True,
                                 force=arg_options.force)
         # special case for the setup.py file
         shutil.copy2(os.path.join('config', 'setup.py'), '.')
