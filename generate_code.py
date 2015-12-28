@@ -1,7 +1,8 @@
 #!/usr/bin/env python
 ################################################################################
-# This script generates all templated code for CySparse
-# It this the single one script to use before Cythonizing the CySparse library.
+# This script generates all templated code for qr_mumps.py
+# It this the single one script to use before Cythonizing the qr_mumps.py
+# library.
 # This script is NOT automatically called by setup.py
 #
 # We use our internal library cygenja, using itself the Jinja2 template engine:
