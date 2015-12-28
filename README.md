@@ -40,13 +40,13 @@ To run the tests:
 
    - Python version
 
-		 python setup.py install
+	        python setup.py install
 
    - Cython version
 
-         python generate_code.py
-    	 python setup.py build
-    	 python setup.py install
+            python generate_code.py
+    	    python setup.py build
+    	    python setup.py install
 
 ## Running examples
 
