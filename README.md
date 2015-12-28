@@ -3,9 +3,29 @@ Python inferface to qr_mumps ([A multithreaded multifrontal QR solver](http://bu
 
 It supports all four types (single real, double real, single complex and double complex).
 
+## Dependencies
+
+For the Python version:
+
+- NumPy;
+
+For the Cython version, include everything needed for the Python version and add:
+
+- Cython
+- cygenja.
+
+If you intend to generate the documention:
+
+- Sphinx
+- sphinx_bootstrap_theme.
+
+To run the tests:
+
+- nose.
+
 
 ## Installation
-    
+
 1. You need to install qr_mumps. Follow instructions on [their website](http://buttari.perso.enseeiht.fr/qr_mumps/).
        If you are under OS X, a [Homebrew](http://brew.sh) formula is available. Follow the instructions to install Homebrew.
        Then, qr_mumps and its dependencies can be installed automatically in `/usr/local` by typing
@@ -18,15 +38,20 @@ It supports all four types (single real, double real, single complex and double 
     
 3. Install `qr_mumps.py`
 
-    	python generate_code.py -a
-    	python setup.py build
-    	python setup.py install
+   - Python version
+
+		 python setup.py install
+
+   - Cython version
+
+         python generate_code.py
+    	 python setup.py build
+    	 python setup.py install
 
 ## Running examples
 
 ## TODO:
 
-  - [ ] Add tests for everything (almost done)
   - [ ] Add refine method
   - [ ] Add a Q-less derived class
   - [ ] Update examples
