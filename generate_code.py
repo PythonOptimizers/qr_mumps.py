@@ -1,18 +1,11 @@
 #!/usr/bin/env python
 ################################################################################
-# This script generates all templated code for qr_mumps.py
-# It is the single one script to use before Cythonizing the qr_mumps.py library.
+# This script generates all templated code for CySparse
+# It this the single one script to use before Cythonizing the CySparse library.
 # This script is NOT automatically called by setup.py
 #
-# The order of code generation is from the "inside towards the outside":
-#
-# - first generate the most inner code, i.e. the code that is used inside other
-#   code;
-# - layer by layer, generate the code that only depends on already action code.
-#
-# We use this homemade script with the Jinja2 template engine:
+# We use our internal library cygenja, using itself the Jinja2 template engine:
 # http://jinja.pocoo.org/docs/dev/
-#
 ################################################################################
 from cygenja.generator import Generator
 from jinja2 import Environment, FileSystemLoader
