@@ -23,6 +23,11 @@ To run the tests:
 
 - nose.
 
+## Optional dependencies
+
+`qr_mumps.py` provides facilities for sparse matrices coming from the [`CySparse`](https://github.com/PythonOptimizers/cysparse) library.
+If you want to use these facilities, set the location of the `CySparse` library in your `site.cfg` file.
+
 
 ## Installation
 
