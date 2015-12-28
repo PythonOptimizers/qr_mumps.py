@@ -4,8 +4,15 @@
 This file tests basic operations on **all** types supported by MUMPS
 and on symmetric and general matrices.
 """
-from cysparse.sparse.ll_mat import *
-import cysparse.types.cysparse_types as types
+cysparse_installed = False
+try:
+    from cysparse.sparse.ll_mat import *
+    import cysparse.types.cysparse_types as types
+    cysparse_installed = True
+except:
+    print "CySparse is not installed, no tests will be run."
+    pass
+
 
 from qr_mumps.solver import QRMUMPSSolver
 import numpy as np

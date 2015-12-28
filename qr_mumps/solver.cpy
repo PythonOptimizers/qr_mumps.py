@@ -89,7 +89,7 @@ def QRMUMPSSolver(arg1, verbose=False):
         {% else %}
             elif dtype == np.@element_type|lower@:
         {% endif %}
-           solver = NumpyQRMUMPSSolver_@index_type@_@element_type@(m, n, a_row.size, verbose=verbose)
+                solver = NumpyQRMUMPSSolver_@index_type@_@element_type@(m, n, a_row.size, verbose=verbose)
                 solver.get_matrix_data(a_row, a_col, a_val)
                 return solver
       {% endfor %}
@@ -101,7 +101,7 @@ def QRMUMPSSolver(arg1, verbose=False):
         {% else %}
             elif dtype == np.@element_type|lower@:
         {% endif %}
-           solver = NumpyQRMUMPSSolver_@index_type@_@element_type@(m, n, a_row.size, verbose=verbose)
+                solver = NumpyQRMUMPSSolver_@index_type@_@element_type@(m, n, a_row.size, verbose=verbose)
                 solver.get_matrix_data(a_row, a_col, a_val)
                 return solver
       {% endfor %}
@@ -130,7 +130,7 @@ def QRMUMPSSolver(arg1, verbose=False):
         {% else %}
             elif dtype == @element_type@_T:
         {% endif %}
-           solver = CySparseQRMUMPSSolver_@index_type@_@element_type@(m, n, A.nnz, verbose=verbose)
+                solver = CySparseQRMUMPSSolver_@index_type@_@element_type@(m, n, A.nnz, verbose=verbose)
                 solver.get_matrix_data(A)
                 return solver
     {% endfor %}
@@ -142,7 +142,7 @@ def QRMUMPSSolver(arg1, verbose=False):
         {% else %}
             elif dtype == @element_type@_T:
         {% endif %}
-           solver = CySparseQRMUMPSSolver_@index_type@_@element_type@(m, n, A.nnz, verbose=verbose)
+                solver = CySparseQRMUMPSSolver_@index_type@_@element_type@(m, n, A.nnz, verbose=verbose)
                 solver.get_matrix_data(A)
                 return solver
     {% endfor %}
