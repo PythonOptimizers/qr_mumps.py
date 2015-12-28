@@ -1,5 +1,5 @@
 # qr_mumps.py
-Python inferface to qr_mumps ([A multithreaded multifrontal QR solver](http://buttari.perso.enseeiht.fr/qr_mumps/)).
+Cython/Python inferface to qr_mumps ([A multithreaded multifrontal QR solver](http://buttari.perso.enseeiht.fr/qr_mumps/)).
 
 It supports all four types (single real, double real, single complex and double complex).
 
