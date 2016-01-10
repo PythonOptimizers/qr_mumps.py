@@ -29,7 +29,7 @@ class CySparseQRMUMPSSolverTestCaseMoreLinesThanColumns_@index_type@_@element_ty
         arow = np.array([1,2,5,0,5,1,3,4,6,1,2,1,3], dtype=np.@index_type|lower@)
         acol = np.array([0,0,0,1,1,2,2,2,2,3,3,4,4], dtype=np.@index_type|lower@)
         aval = np.array([0.7,0.6,0.4,0.1,0.1,0.3,0.6,0.7,0.2,0.5,0.2,0.1,0.6], dtype=np.@element_type|lower@)
-        self.A = NewLLSparseMatrix(nrow=self.m, ncol=self.n, itype=types.@index_type@_T, dtype=types.@element_type@_T)
+        self.A = LLSparseMatrix(nrow=self.m, ncol=self.n, itype=types.@index_type@_T, dtype=types.@element_type@_T)
         self.A.put_triplet(arow, acol, aval)
         print self.A
 
@@ -96,7 +96,7 @@ class CySparseQRMUMPSSolverTestCaseMoreColumnsThanLines_@index_type@_@element_ty
         acol = np.array([1,2,5,0,5,1,3,4,6,1,2,1,3], dtype=np.@index_type|lower@)
         arow = np.array([0,0,0,1,1,2,2,2,2,3,3,4,4], dtype=np.@index_type|lower@)
         aval = np.array([0.7,0.6,0.4,0.1,0.1,0.3,0.6,0.7,0.2,0.5,0.2,0.1,0.6], dtype=np.@element_type|lower@)
-        self.A = NewLLSparseMatrix(nrow=self.m, ncol=self.n, itype=types.@index_type@_T, dtype=types.@element_type@_T)
+        self.A = LLSparseMatrix(nrow=self.m, ncol=self.n, itype=types.@index_type@_T, dtype=types.@element_type@_T)
         self.A.put_triplet(arow, acol, aval)
 
     def test_init(self):

@@ -1,5 +1,5 @@
 from cysparse.sparse.ll_mat_matrices.ll_mat_@index@_t_@type@_t cimport LLSparseMatrix_@index@_t_@type@_t
-from cysparse.cysparse_types.cysparse_types cimport *
+from cysparse.common_types.cysparse_types cimport *
 
 from qr_mumps.src.qr_mumps_@index@_@type@ cimport BaseQRMUMPSSolver_@index@_@type@, c_to_fortran_index_array
 
@@ -47,11 +47,11 @@ cdef class CySparseQRMUMPSSolver_@index@_@type@(BaseQRMUMPSSolver_@index@_@type@
 
 {% if type in complex_list %} 
         a_val = <@type@_t *> PyMem_Malloc(self.nnz * sizeof(@type@_t))
-        A.take_triplet_pointers(self.params.irn, self.params.jcn, a_val)
+        A.fill_triplet(self.params.irn, self.params.jcn, a_val)
         self.params.val = <@type|generic_to_c_type@ *> a_val
 {% else %}
         self.params.val = <@type@_t *> PyMem_Malloc(self.nnz * sizeof(@type@_t))
-        A.take_triplet_pointers(self.params.irn, self.params.jcn, self.params.val)
+        A.fill_triplet(self.params.irn, self.params.jcn, self.params.val)
 {% endif %}
 
         # convert irn and jcn indices to Fortran format
