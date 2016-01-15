@@ -33,9 +33,9 @@ cdef class NumpyQRMUMPSSolver_@index@_@type@(BaseQRMUMPSSolver_@index@_@type@):
                                 cnp.ndarray[cnp.@type|lower@_t, ndim=1] aval):
         """
         Args:
-            arow:  
-            acol:
-            aval:
+            arow: row indices of non zero elements of A
+            acol: column indices of non zero elements of A
+            aval: values of non zeros elements of A
 
         Note: we keep the same name for this method in all derived classes.
         """

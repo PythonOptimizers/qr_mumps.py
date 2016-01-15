@@ -39,7 +39,9 @@ If you want to use these facilities, set the location of the `CySparse` library 
 
     	brew install qr_mumps
 
-2. Clone this repo and modify the `site.cfg` to match your configuration
+2. Clone this repo
+
+3. Copy `site.template.cfg` to `site.cfg` and modify `site.cfg` to match your configuration
     
 3. Install `qr_mumps.py`
 

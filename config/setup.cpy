@@ -70,9 +70,6 @@ if use_cython:
 default_include_dir = qr_mumps_config.get('DEFAULT', 'include_dirs').split(os.pathsep)
 default_library_dir = qr_mumps_config.get('DEFAULT', 'library_dirs').split(os.pathsep)
 
-# qr_mumps
-qr_mumps_compiled_in_64bits = qr_mumps_config.getboolean('QR_MUMPS', 'qr_mumps_compiled_in_64bits')
-
 # Debug mode
 use_debug_symbols = qr_mumps_config.getboolean('CODE_GENERATION', 'use_debug_symbols')
 
@@ -182,17 +179,17 @@ setup(name=  'qr_mumps.py',
       description='A python interface to qr_mumps',
       long_description=long_description,
       #Author details
-      author='Nikolaj van Omme, Sylvain Arreckx, Dominique Orban',
+      author='Sylvain Arreckx, Dominique Orban and Nikolaj van Omme',
 {% raw %}
-      author_email='qr_mumps\@TODO.com',
+      author_email='sylvain.arreckx@gmail.com',
 {% endraw %}
-      maintainer = "qr_mumps.py Developers",
+      maintainer = "Sylvain Arreckx",
 {% raw %}
       maintainer_email = "sylvain.arreckx@gmail.com",
 {% endraw %}
-      summary = "A python interface to qr_mumps",
-      url = "https://github.com/optimizers/qr_mumps",
-      download_url = "https://github.com/optimizers/qr_mumps",
+      summary = "A Cython/Python interface to the qr_mumps solver.",
+      url = "https://github.com/PythonOptimizers/qr_mumps.py.git",
+      download_url = "https://github.com/PythonOptimizers/qr_mumps.py.git",
       license='LGPL',
       classifiers=filter(None, CLASSIFIERS.split('\n')),
       install_requires=['numpy', 'Cython'],

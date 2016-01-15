@@ -17,8 +17,6 @@ cdef class CySparseQRMUMPSSolver_@index@_@type@(BaseQRMUMPSSolver_@index@_@type@
     We follow the common use of QR_MUMPS. In particular, we use the same names for the methods of this
     class as their corresponding counter-parts in QR_MUMPS.
 
-    A: A :class:`LLSparseMatrix_@index@_t_@type@_t` object.
-
     Warning:
         The solver takes a "snapshot" of the matrix ``A``, i.e. the results given by the solver are only
         valid for the matrix given. If the matrix ``A`` changes aferwards, the results given by the solver won't
@@ -41,6 +39,14 @@ cdef class CySparseQRMUMPSSolver_@index@_@type@(BaseQRMUMPSSolver_@index@_@type@
 
         Note: we keep the same name for this method in all derived classes.
         """
+
+        # CySparse matrices can have a `store_symmetric` flag set in that case
+        # only lower triangular values are stored. However qr_mumps doesn't deal with it
+        # we need to supply values for lower and upper parts.
+        A.generalize()  # Convert matrix from symmetric to non-symmetric form (in-place).
+        self.nnz = A.nnz
+        self.params.nz = A.nnz
+
         # allocate memory for irn and jcn
         self.params.irn = <@index|generic_to_c_type@ *> PyMem_Malloc(self.nnz * sizeof(@index|generic_to_c_type@))
         self.params.jcn = <@index|generic_to_c_type@ *> PyMem_Malloc(self.nnz * sizeof(@index|generic_to_c_type@))
