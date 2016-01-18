@@ -56,17 +56,12 @@ default_index_type_str = '32bits'
 if is_64bits:
     default_index_type_str = '64bits'
 
-mumps_config = ConfigParser.SafeConfigParser()
-mumps_config.read('site.cfg')
+qr_mumps_config = ConfigParser.SafeConfigParser()
+qr_mumps_config.read('site.cfg')
 
-# test if compiled lib has been compiled in 64 or 32 bits
-MUMPS_INT = None
-if mumps_config.getboolean('QR_MUMPS', 'qr_mumps_compiled_in_64bits'):
-    MUMPS_INT = 'INT64'
-else:
-    MUMPS_INT = 'INT32'
+QR_MUMPS_INT = 'INT32'
 
-INDEX_TYPES = [MUMPS_INT]
+INDEX_TYPES = [QR_MUMPS_INT]
 
 COMPLEX_ELEMENT_TYPES = ['COMPLEX64', 'COMPLEX128']
 REAL_ELEMENT_TYPES = ['FLOAT32', 'FLOAT64']
@@ -164,20 +159,20 @@ LOG_LEVELS = {
     'CRITICAL': logging.CRITICAL}
 
 
-def create_logger(mumps_config):
-    logger_name = mumps_config.get('CODE_GENERATION', 'log_name')
+def create_logger(qr_mumps_config):
+    logger_name = qr_mumps_config.get('CODE_GENERATION', 'log_name')
     if logger_name == '':
         logger_name = 'qr_mumps_generator'
 
     logger = logging.getLogger(logger_name)
 
     # levels
-    log_level = LOG_LEVELS[mumps_config.get('CODE_GENERATION',
-                                            'log_level')]
-    console_log_level = LOG_LEVELS[mumps_config.get('CODE_GENERATION',
-                                                    'console_log_level')]
-    file_log_level = LOG_LEVELS[mumps_config.get('CODE_GENERATION',
-                                                 'file_log_level')]
+    log_level = LOG_LEVELS[qr_mumps_config.get('CODE_GENERATION',
+                                               'log_level')]
+    console_log_level = LOG_LEVELS[qr_mumps_config.get('CODE_GENERATION',
+                                                       'console_log_level')]
+    file_log_level = LOG_LEVELS[qr_mumps_config.get('CODE_GENERATION',
+                                                    'file_log_level')]
 
     logger.setLevel(log_level)
 
@@ -215,7 +210,7 @@ if __name__ == "__main__":
     arg_options = parser.parse_args()
 
     # create logger
-    logger = create_logger(mumps_config)
+    logger = create_logger(qr_mumps_config)
 
     # cygenja engine
     current_directory = os.path.dirname(os.path.abspath(__file__))

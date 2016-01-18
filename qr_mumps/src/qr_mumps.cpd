@@ -85,18 +85,18 @@ cdef extern from "@type|generic_to_qr_mumps_type@qrm_mumps.h":
 
 cdef class AnalysisStatistics:
     cdef :
-        int e_facto_flops
-        int e_nnz_r
-        int e_nnz_h
+        long int e_facto_flops
+        long int e_nnz_r
+        long int e_nnz_h
         int ordering
         double time
 
 
 cdef class FactorizationStatistics:
     cdef :
-        int facto_flops
-        int nnz_r
-        int nnz_h
+        long int facto_flops
+        long int nnz_r
+        long int nnz_h
         int ordering
         double time
 

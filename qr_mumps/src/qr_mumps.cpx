@@ -114,10 +114,10 @@ cdef class AnalysisStatistics:
     """
     Statistics computed after an analysis phase has been performed.
     """
-    def __cinit__(self, params, ordering, time):
-        self.e_facto_flops = params[qrm_e_facto_flops_]
-        self.e_nnz_r = params[qrm_e_nnz_r_]
-        self.e_nnz_h = params[qrm_e_nnz_h_]
+    def __cinit__(self, gstats, ordering, time):
+        self.e_facto_flops = gstats[qrm_e_facto_flops_]
+        self.e_nnz_r = gstats[qrm_e_nnz_r_]
+        self.e_nnz_h = gstats[qrm_e_nnz_h_]
         self.ordering = ordering
         self.time = time
 
@@ -139,10 +139,10 @@ cdef class FactorizationStatistics(object):
     """
     Statistics computed after a factorization phase has been performed.
     """
-    def __cinit__(self, params, ordering, time):
-        self.facto_flops = params[qrm_facto_flops_]
-        self.nnz_r = params[qrm_nnz_r_]
-        self.nnz_h = params[qrm_nnz_h_]
+    def __cinit__(self, gstats, ordering, time):
+        self.facto_flops = gstats[qrm_facto_flops_]
+        self.nnz_r = gstats[qrm_nnz_r_]
+        self.nnz_h = gstats[qrm_nnz_h_]
         self.ordering = ordering
         self.time = time
 

@@ -47,6 +47,8 @@ cdef class CySparseQRMUMPSSolver_@index@_@type@(BaseQRMUMPSSolver_@index@_@type@
         self.nnz = A.nnz
         self.params.nz = A.nnz
 
+        print A
+
         # allocate memory for irn and jcn
         self.params.irn = <@index|generic_to_c_type@ *> PyMem_Malloc(self.nnz * sizeof(@index|generic_to_c_type@))
         self.params.jcn = <@index|generic_to_c_type@ *> PyMem_Malloc(self.nnz * sizeof(@index|generic_to_c_type@))

@@ -7,7 +7,7 @@ It supports all four types (single real, double real, single complex and double 
 
 For the Python version:
 
-- NumPy;
+- NumPy
 
 For the Cython version, include everything needed for the Python version and add:
 
