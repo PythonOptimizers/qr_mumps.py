@@ -22,31 +22,33 @@ print A
 solver = QRMUMPSSolver((m, n, arow, acol, aval), verbose=False)
 
 solver.analyze()
-print solver.analyzed
 
 solver.factorize()
 
+print "\n\nSolving Ax = b where b is a vector"
 e = np.ones(n, dtype=np.float64)
-rhs = np.dot(A, e)
-print "rhs:"
-print rhs
+b = np.dot(A, e)
+print "b:"
+print b
 
-x = solver.solve(rhs)
+x = solver.solve(b)
 np.testing.assert_almost_equal(x, e)
-print "x:"
+print "x: it should be a vector of ones"
 print x
 
 
-print "=" * 80
+print "\n"+"=" * 80+"\n"
+print "Solving Ax = B where B is a matrix"
 
-B = np.ones([n, 3], dtype=np.float64)
-B[:, 1] = 2 * B[:, 1]
-B[:, 2] = 3 * B[:, 2]
-rhs = np.dot(A, B)
-print "rhs:"
-print rhs
+E = np.ones([n, 3], dtype=np.float64)
+E[:, 1] = 2 * E[:, 1]
+E[:, 2] = 3 * E[:, 2]
+B = np.dot(A, E)
+print "B:"
+print B
 
-x = solver.solve(rhs)
-np.testing.assert_almost_equal(x, B)
-print "x:"
+x = solver.solve(B)
+np.testing.assert_almost_equal(x, E)
+print "x: it should be the m x 3 matrix "
+print "   with 1 on the first column, 2 on the second and 3 on the third."
 print x

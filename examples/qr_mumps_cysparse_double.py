@@ -17,36 +17,36 @@ print "A:"
 print A
 
 
-e = np.ones(n, 'd')
-rhs = A*e
-
-print "rhs:"
-print rhs
-
 solver = QRMUMPSSolver(A, verbose=True)
 
 solver.analyze()
 
 solver.factorize()
 
-x = solver.least_squares(rhs)
-np.testing.assert_almost_equal(A*x, rhs, 5)
+print "\n\nFinding a least-square solution to Ax = b where b is a vector"
+e = np.ones(n, 'd')
+b = A*e
+print "b:"
+print b
 
-x = solver.solve(rhs)
-np.testing.assert_almost_equal(x, e)
-
-print "= " * 80
-
-rhs = np.ones([n, 3], "d")
-rhs[:, 1] = 2 * rhs[:, 1]
-rhs[:, 2] = 3 * rhs[:, 2]
-print "rhs:"
-print rhs
-
-x = solver.solve(rhs)
+x = solver.least_squares(b)
+np.testing.assert_almost_equal(A*x, b, 5)
 print "x:"
 print x
 
-np.testing.assert_almost_equal(A*x[:, 0], rhs[:, 0])
-np.testing.assert_almost_equal(A*x[:, 1], rhs[:, 1])
-np.testing.assert_almost_equal(A*x[:, 2], rhs[:, 2])
+print "\n"+"=" * 80+"\n"
+print "Solving Ax = B where B is a matrix"
+
+B = np.ones([n, 3], "d")
+B[:, 1] = 2 * B[:, 1]
+B[:, 2] = 3 * B[:, 2]
+print "B:"
+print B
+
+x = solver.solve(B)
+print "x:"
+print x
+
+np.testing.assert_almost_equal(A*x[:, 0], B[:, 0])
+np.testing.assert_almost_equal(A*x[:, 1], B[:, 1])
+np.testing.assert_almost_equal(A*x[:, 2], B[:, 2])
