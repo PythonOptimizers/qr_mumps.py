@@ -4,7 +4,7 @@ os:
     - osx
 before_install:
     - brew update
-    - brew install qr_mumps --HEAD
+    - brew install homebrew/science/qr_mumps --HEAD
 install:
     - pip install numpy
     - pip install cython
