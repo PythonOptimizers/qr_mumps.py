@@ -1,10 +1,20 @@
-os: osx
-language: python
-python:
-    - "2.7"
-branches:
-  only:
-    - master
+language: 
+    - objective-c
+os:
+    - osx
 before_install:
     - brew update
-    - brew install mumps
+    - brew install qr_mumps --HEAD
+install:
+    - pip install numpy
+    - pip install cython
+    - pip install Jinja2
+    - git clone https://github.com/PythonOptimizers/cygenja.git
+    - cd cygenja
+    - python setup.py install
+    - cd ..
+    - git clone https://github.com/PythonOptimizers/qr_mumps.py.git
+    - cd qr_mumps.py
+    - git checkout develop
+    - python generate_code.py
+    - python setup.py install
