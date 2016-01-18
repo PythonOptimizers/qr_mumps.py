@@ -6,6 +6,9 @@ before_install:
     - brew update
     - brew install homebrew/science/qr_mumps
 install:
+    - pip install virtualenv
+    - virtualenv ~/.venv
+    - source ~/.venv/bin/activate
     - pip install numpy
     - pip install cython
     - pip install Jinja2
