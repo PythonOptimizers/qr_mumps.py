@@ -18,7 +18,7 @@ print A
 
 
 solver = QRMUMPSSolver(A, verbose=True)
-
+print solver
 solver.analyze()
 
 solver.factorize()
@@ -37,7 +37,7 @@ print x
 print "\n"+"=" * 80+"\n"
 print "Solving Ax = B where B is a matrix"
 
-B = np.ones([n, 3], "d")
+B = np.ones([m, 3], "d")
 B[:, 1] = 2 * B[:, 1]
 B[:, 2] = 3 * B[:, 2]
 print "B:"

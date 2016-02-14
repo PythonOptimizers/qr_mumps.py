@@ -7,7 +7,7 @@ and on symmetric and general matrices.
 cysparse_installed = False
 try:
     from cysparse.sparse.ll_mat import *
-    import cysparse.types.cysparse_types as types
+    import cysparse.common_types.cysparse_types as types
     cysparse_installed = True
 except:
     print "CySparse is not installed, no tests will be run."
@@ -60,18 +60,24 @@ class CySparseQRMUMPSSolverTestCaseMoreLinesThanColumns_@index_type@_@element_ty
         solver = QRMUMPSSolver(self.A, verbose=False)
         solver.factorize()
         B = np.ones([self.n, 3], dtype=np.@element_type|lower@)
-        B[: ,1] = 2 * B[:,1]
-        B[: ,2] = 3 * B[:,2]
-        rhs = self.A * B
+        B[:, 1] = 2 * B[:, 1]
+        B[:, 2] = 3 * B[:, 2]
+        rhs = np.ones([self.m, 3], dtype=np.@element_type|lower@)
+        rhs[:, 0] = self.A*B[:, 0]
+        rhs[:, 1] = self.A*B[:, 1]
+        rhs[:, 2] = self.A*B[:, 2]
         x = solver.solve(rhs)
         assert_almost_equal(x, B, 5)
 
     def test_dense_least_squares_multiple_rhs(self):
         solver = QRMUMPSSolver(self.A, verbose=False)
         B = np.ones([self.n, 3], dtype=np.@element_type|lower@)
-        B[: ,1] = 2 * B[:,1]
-        B[: ,2] = 3 * B[:,2]
-        rhs = self.A * B
+        B[:, 1] = 2 * B[:, 1]
+        B[:, 2] = 3 * B[:, 2]
+        rhs = np.ones([self.m, 3], dtype=np.@element_type|lower@)
+        rhs[:, 0] = self.A*B[:, 0]
+        rhs[:, 1] = self.A*B[:, 1]
+        rhs[:, 2] = self.A*B[:, 2]
         x = solver.least_squares(rhs)
         assert_almost_equal(x, B, 5)
 
@@ -82,11 +88,10 @@ class CySparseQRMUMPSSolverTestCaseMoreLinesThanColumns_@index_type@_@element_ty
 
     def test_dense_minimum_norm_multiple_rhs(self):
         solver = QRMUMPSSolver(self.A, verbose=False)
-        B = np.ones([self.n, 3], dtype=np.@element_type|lower@)
+        B = np.ones([self.m, 3], dtype=np.@element_type|lower@)
         B[: ,1] = 2 * B[:,1]
         B[: ,2] = 3 * B[:,2]
-        rhs = self.A * B
-        assert_raises(RuntimeError, solver.minimum_norm, rhs)
+        assert_raises(RuntimeError, solver.minimum_norm, B)
   
 
 class CySparseQRMUMPSSolverTestCaseMoreColumnsThanLines_@index_type@_@element_type@(TestCase):
@@ -126,12 +131,13 @@ class CySparseQRMUMPSSolverTestCaseMoreColumnsThanLines_@index_type@_@element_ty
     def test_dense_solve_multiple_rhs(self):
         solver = QRMUMPSSolver(self.A, verbose=False)
         solver.factorize()
-        B = np.ones([self.n, 3], dtype=np.@element_type|lower@)
+        B = np.ones([self.m, 3], dtype=np.@element_type|lower@)
         B[: ,1] = 2 * B[:,1]
         B[: ,2] = 3 * B[:,2]
-        rhs = self.A * B
-        x = solver.solve(rhs)
-        assert_almost_equal(self.A*x, rhs, 5)
+        x = solver.solve(B)
+        assert_almost_equal(self.A*x[:, 0], B[:, 0], 5)
+        assert_almost_equal(self.A*x[:, 1], B[:, 1], 5)
+        assert_almost_equal(self.A*x[:, 2], B[:, 2], 5)
 
     def test_least_squares(self):
         solver = QRMUMPSSolver(self.A, verbose=False)
@@ -145,13 +151,13 @@ class CySparseQRMUMPSSolverTestCaseMoreColumnsThanLines_@index_type@_@element_ty
 
     def test_dense_minimum_norm_multiple_rhs(self):
         solver = QRMUMPSSolver(self.A, verbose=False)
-        B = np.ones([self.n, 3], dtype=np.@element_type|lower@)
+        B = np.ones([self.m, 3], dtype=np.@element_type|lower@)
         B[: ,1] = 2 * B[:,1]
         B[: ,2] = 3 * B[:,2]
-        rhs = self.A * B
-        x = solver.minimum_norm(rhs)
-        assert_almost_equal(self.A*x, rhs, 5)
-
+        x = solver.minimum_norm(B)
+        assert_almost_equal(self.A*x[:, 0], B[:, 0], 5)
+        assert_almost_equal(self.A*x[:, 1], B[:, 1], 5)
+        assert_almost_equal(self.A*x[:, 2], B[:, 2], 5)
 
 
   {% endfor %}

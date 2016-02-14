@@ -16,7 +16,7 @@ try:
     from qr_mumps.src.cysparse_qr_mumps_@index_type@_@element_type@ import CySparseQRMUMPSSolver_@index_type@_@element_type@
     {% endfor %}
     from cysparse.sparse.ll_mat import PyLLSparseMatrix_Check
-    from cysparse.types.cysparse_types import *
+    from cysparse.common_types.cysparse_types import *
     cysparse_installed = True
 {% endfor %}
 except:
@@ -150,4 +150,6 @@ def QRMUMPSSolver(arg1, verbose=False):
 {% endfor %}
         else:
             raise TypeError(type_error_msg)
+    else:
+        raise TypeError("This matrix type is not recognized/implemented")
 
