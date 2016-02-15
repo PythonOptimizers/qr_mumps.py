@@ -26,6 +26,18 @@ class NumpyQRMUMPSSolverTestCaseMoreLinesThanColumns_@index_type@_@element_type@
         solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
         assert_equal(self.n, solver.n)
 
+    def test_number_of_args(self):
+        assert_raises(ValueError, QRMUMPSSolver, (self.m, self.n, self.arow, self.acol, self.aval, 1))
+        assert_raises(TypeError, QRMUMPSSolver, self.m)
+
+    def test_entry_index_types(self):
+        self.acol = np.array([0,0,0,1,1,2,2,2,2,3,3,4,4], dtype=np.float128)
+        assert_raises(TypeError, QRMUMPSSolver, (self.m, self.n, self.arow, self.acol, self.aval))
+
+    def test_entry_element_types(self):
+        self.aval = np.array([0.7,0.6,0.4,0.1,0.1,0.3,0.6,0.7,0.2,0.5,0.2,0.1,0.6], dtype=np.float128)
+        assert_raises(TypeError, QRMUMPSSolver, (self.m, self.n, self.arow, self.acol, self.aval))
+
     def test_analyze(self):
         solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
         solver.analyze()

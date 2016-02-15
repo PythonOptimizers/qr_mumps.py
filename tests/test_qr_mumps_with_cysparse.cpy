@@ -20,6 +20,31 @@ from numpy.testing import *
 import sys
 
 
+class CySparseQRMUMPSSolverInput(TestCase):
+    def setUp(self):
+        pass
+
+    def test_index(self):
+        m = 7
+        n = 5
+        arow = np.array([1,2,5,0,5,1,3,4,6,1,2,1,3], dtype=np.int64)
+        acol = np.array([0,0,0,1,1,2,2,2,2,3,3,4,4], dtype=np.int64)
+        aval = np.array([0.7,0.6,0.4,0.1,0.1,0.3,0.6,0.7,0.2,0.5,0.2,0.1,0.6], dtype=np.float64)
+        A = LLSparseMatrix(nrow=m, ncol=n, itype=types.INT64_T, dtype=types.FLOAT64_T)
+        A.put_triplet(arow, acol, aval)
+        assert_raises(TypeError, QRMUMPSSolver, A)
+
+    def test_type(self):
+        m = 7
+        n = 5
+        arow = np.array([1,2,5,0,5,1,3,4,6,1,2,1,3], dtype=np.int32)
+        acol = np.array([0,0,0,1,1,2,2,2,2,3,3,4,4], dtype=np.int32)
+        aval = np.array([0.7,0.6,0.4,0.1,0.1,0.3,0.6,0.7,0.2,0.5,0.2,0.1,0.6], dtype=np.float128)
+        A = LLSparseMatrix(nrow=m, ncol=n, itype=types.INT32_T, dtype=types.FLOAT128_T)
+        A.put_triplet(arow, acol, aval)
+        assert_raises(TypeError, QRMUMPSSolver, A)
+
+
 {% for index_type in index_list %}
     {% for element_type in type_list %}
 class CySparseQRMUMPSSolverTestCaseMoreLinesThanColumns_@index_type@_@element_type@(TestCase):

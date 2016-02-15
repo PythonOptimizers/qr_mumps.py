@@ -80,6 +80,9 @@ def QRMUMPSSolver(arg1, verbose=False):
         itype = a_row.dtype
         dtype = a_val.dtype
 
+        if itype != a_col.dtype:
+            raise TypeError(type_error_msg)
+
 {% for index_type in index_list %}
   {% if index_type == index_list |first %}
         if itype == np.@index_type|lower@:
@@ -106,6 +109,8 @@ def QRMUMPSSolver(arg1, verbose=False):
                 return solver
       {% endfor %}
   {% endif %}
+            else:
+                raise TypeError(type_error_msg)
 {% endfor %}
         else:
             raise TypeError(type_error_msg)
@@ -147,6 +152,9 @@ def QRMUMPSSolver(arg1, verbose=False):
                 return solver
     {% endfor %}
     {% endif %}
+            else:
+                raise TypeError(type_error_msg)
+
 {% endfor %}
         else:
             raise TypeError(type_error_msg)
