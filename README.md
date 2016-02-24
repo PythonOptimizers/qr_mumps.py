@@ -1,4 +1,7 @@
 # qr_mumps.py
+
+[![Build Status](https://travis-ci.com/PythonOptimizers/qr_mumps.py.svg?token=33z5zptBt5SzXC4ZvLpF&branch=master)](https://travis-ci.com/PythonOptimizers/qr_mumps.py)
+
 Cython/Python inferface to qr_mumps ([A multithreaded multifrontal QR solver](http://buttari.perso.enseeiht.fr/qr_mumps/)).
 
 It supports all four types (single real, double real, single complex and double complex).
