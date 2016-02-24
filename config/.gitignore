@@ -6,6 +6,8 @@ __pycache__/
 *.py[cod]
 
 config
+generate_code.py
+release.sh
 
 # C extensions
 *.so
