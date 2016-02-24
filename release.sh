@@ -9,6 +9,9 @@ git checkout -b without-cython
 git rm --cached \*.cpy
 git rm --cached \*.cpx
 git rm --cached \*.cpd
+git rm --cached generate_code.py
+git rm --cached release.sh
+
 mv .gitignore /tmp/.gitignore-qr_mumps
 
 cp config/site.template.cython.cfg site.cfg
