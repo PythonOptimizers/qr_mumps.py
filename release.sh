@@ -36,4 +36,3 @@ git commit -m "c files from last commit in develop"
 git push --set-upstream origin without-cython
 git checkout develop
 
-cp config/site.template.cfg site.cfg
