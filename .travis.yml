@@ -5,19 +5,5 @@ os:
 before_install:
     - brew update
     - brew install homebrew/science/qr_mumps
-install:
-    - pip install virtualenv
-    - virtualenv ~/.venv
-    - source ~/.venv/bin/activate
-    - pip install numpy
-    - pip install cython
-    - pip install Jinja2
-    - git clone https://github.com/PythonOptimizers/cygenja.git
-    - cd cygenja
-    - python setup.py install
-    - cd ..
-    - git clone https://github.com/PythonOptimizers/qr_mumps.py.git
-    - cd qr_mumps.py
-    - git checkout develop
-    - python generate_code.py
-    - python setup.py install
+install: "pip install -r requirements.txt && python setup.py install"
+script: python run_tests.py
