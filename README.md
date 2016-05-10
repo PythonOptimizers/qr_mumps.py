@@ -10,12 +10,12 @@ It supports all four types (single real, double real, single complex and double 
 
 For the Python version:
 
-- NumPy
+- [`Numpy`](http://www.numpy.org) 
 
 For the Cython version, include everything needed for the Python version and add:
 
-- Cython
-- cygenja.
+- [`Cython`](https://github.com/cython/cython.git)
+- [`cygenja`](https://github.com/PythonOptimizers/cygenja.git)
 
 If you intend to generate the documention:
 
