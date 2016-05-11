@@ -1,8 +1,0 @@
-from qr_mumps.src.qr_mumps_@index@_@type@ cimport BaseQRMUMPSSolver_@index@_@type@
-
-cimport numpy as cnp
-cdef class NumpyQRMUMPSSolver_@index@_@type@(BaseQRMUMPSSolver_@index@_@type@):
-    cpdef get_matrix_data(self, cnp.ndarray[cnp.@index|lower@_t, ndim=1] arow,
-                                cnp.ndarray[cnp.@index|lower@_t, ndim=1] acol,
-                                cnp.ndarray[cnp.@type|lower@_t, ndim=1] aval)
- 

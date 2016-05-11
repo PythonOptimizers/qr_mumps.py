@@ -3,40 +3,24 @@ Factory method to access qr_mumps.
 """
 import numpy as np
 
-{% for index_type in index_list %}
-    {% for element_type in type_list %}
-from qr_mumps.src.numpy_qr_mumps_@index_type@_@element_type@ import NumpyQRMUMPSSolver_@index_type@_@element_type@
-    {% endfor %}
-{% endfor %}
+from qr_mumps.src.numpy_qr_mumps_INT32_COMPLEX64 import NumpyQRMUMPSSolver_INT32_COMPLEX64
+from qr_mumps.src.numpy_qr_mumps_INT32_COMPLEX128 import NumpyQRMUMPSSolver_INT32_COMPLEX128
+from qr_mumps.src.numpy_qr_mumps_INT32_FLOAT32 import NumpyQRMUMPSSolver_INT32_FLOAT32
+from qr_mumps.src.numpy_qr_mumps_INT32_FLOAT64 import NumpyQRMUMPSSolver_INT32_FLOAT64
 
 cysparse_installed = False
 try:
-{% for index_type in index_list %}
-    {% for element_type in type_list %}
-    from qr_mumps.src.cysparse_qr_mumps_@index_type@_@element_type@ import CySparseQRMUMPSSolver_@index_type@_@element_type@
-    {% endfor %}
+    from qr_mumps.src.cysparse_qr_mumps_INT32_COMPLEX64 import CySparseQRMUMPSSolver_INT32_COMPLEX64
+    from qr_mumps.src.cysparse_qr_mumps_INT32_COMPLEX128 import CySparseQRMUMPSSolver_INT32_COMPLEX128
+    from qr_mumps.src.cysparse_qr_mumps_INT32_FLOAT32 import CySparseQRMUMPSSolver_INT32_FLOAT32
+    from qr_mumps.src.cysparse_qr_mumps_INT32_FLOAT64 import CySparseQRMUMPSSolver_INT32_FLOAT64
     from cysparse.sparse.ll_mat import PyLLSparseMatrix_Check
     from cysparse.common_types.cysparse_types import *
     cysparse_installed = True
-{% endfor %}
 except:
     pass
 
-allowed_types = '\titype:
-{%- for index_name in index_list -%}
-    @index_name@
-    {%- if index_name != index_list|last -%}
-    ,
-    {%- endif -%}
-{%- endfor -%}
-\n\tdtype:
-{%- for element_name in type_list -%}
-    @element_name@
-    {%- if element_name != type_list|last -%}
-    ,
-    {%- endif -%}
-{%- endfor -%}
-\n'
+allowed_types = '\titype:INT32\n\tdtype:COMPLEX64,COMPLEX128,FLOAT32,FLOAT64\n'
 type_error_msg = 'Matrix has an index and/or element type that is incompatible \n'
 type_error_msg += 'with qr_mumps\nAllowed types:\n%s' % allowed_types
 
@@ -83,35 +67,25 @@ def QRMUMPSSolver(arg1, verbose=False):
         if itype != a_col.dtype:
             raise TypeError(type_error_msg)
 
-{% for index_type in index_list %}
-  {% if index_type == index_list |first %}
-        if itype == np.@index_type|lower@:
-      {% for element_type in type_list %}
-        {% if element_type == type_list |first %}
-            if dtype == np.@element_type|lower@:
-        {% else %}
-            elif dtype == np.@element_type|lower@:
-        {% endif %}
-                solver = NumpyQRMUMPSSolver_@index_type@_@element_type@(m, n, a_row.size, verbose=verbose)
+        if itype == np.int32:
+            if dtype == np.complex64:
+                solver = NumpyQRMUMPSSolver_INT32_COMPLEX64(m, n, a_row.size, verbose=verbose)
                 solver.get_matrix_data(a_row, a_col, a_val)
                 return solver
-      {% endfor %}
-  {% else %}
-        elif itype == np.@index_type|lower@:
-      {% for element_type in type_list %}
-        {% if element_type == type_list |first %}
-            if dtype == np.@element_type|lower@:
-        {% else %}
-            elif dtype == np.@element_type|lower@:
-        {% endif %}
-                solver = NumpyQRMUMPSSolver_@index_type@_@element_type@(m, n, a_row.size, verbose=verbose)
+            elif dtype == np.complex128:
+                solver = NumpyQRMUMPSSolver_INT32_COMPLEX128(m, n, a_row.size, verbose=verbose)
                 solver.get_matrix_data(a_row, a_col, a_val)
                 return solver
-      {% endfor %}
-  {% endif %}
+            elif dtype == np.float32:
+                solver = NumpyQRMUMPSSolver_INT32_FLOAT32(m, n, a_row.size, verbose=verbose)
+                solver.get_matrix_data(a_row, a_col, a_val)
+                return solver
+            elif dtype == np.float64:
+                solver = NumpyQRMUMPSSolver_INT32_FLOAT64(m, n, a_row.size, verbose=verbose)
+                solver.get_matrix_data(a_row, a_col, a_val)
+                return solver
             else:
                 raise TypeError(type_error_msg)
-{% endfor %}
         else:
             raise TypeError(type_error_msg)
 
@@ -126,38 +100,27 @@ def QRMUMPSSolver(arg1, verbose=False):
         m = A.nrow
         n = A.ncol
 
-{% for index_type in index_list %}
-    {% if index_type == index_list |first %}
-        if itype == @index_type@_T:
-    {% for element_type in type_list %}
-        {% if element_type == type_list |first %}
-            if dtype == @element_type@_T:
-        {% else %}
-            elif dtype == @element_type@_T:
-        {% endif %}
-                solver = CySparseQRMUMPSSolver_@index_type@_@element_type@(m, n, A.nnz, verbose=verbose)
+        if itype == INT32_T:
+            if dtype == COMPLEX64_T:
+                solver = CySparseQRMUMPSSolver_INT32_COMPLEX64(m, n, A.nnz, verbose=verbose)
                 solver.get_matrix_data(A)
                 return solver
-    {% endfor %}
-    {% else %}
-        elif itype == @index_type@_T:
-    {% for element_type in type_list %}
-        {% if element_type == type_list |first %}
-            if dtype == @element_type@_T:
-        {% else %}
-            elif dtype == @element_type@_T:
-        {% endif %}
-                solver = CySparseQRMUMPSSolver_@index_type@_@element_type@(m, n, A.nnz, verbose=verbose)
+            elif dtype == COMPLEX128_T:
+                solver = CySparseQRMUMPSSolver_INT32_COMPLEX128(m, n, A.nnz, verbose=verbose)
                 solver.get_matrix_data(A)
                 return solver
-    {% endfor %}
-    {% endif %}
+            elif dtype == FLOAT32_T:
+                solver = CySparseQRMUMPSSolver_INT32_FLOAT32(m, n, A.nnz, verbose=verbose)
+                solver.get_matrix_data(A)
+                return solver
+            elif dtype == FLOAT64_T:
+                solver = CySparseQRMUMPSSolver_INT32_FLOAT64(m, n, A.nnz, verbose=verbose)
+                solver.get_matrix_data(A)
+                return solver
             else:
                 raise TypeError(type_error_msg)
 
-{% endfor %}
         else:
             raise TypeError(type_error_msg)
     else:
         raise TypeError("This matrix type is not recognized/implemented")
-
