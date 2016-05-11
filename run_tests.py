@@ -27,10 +27,8 @@ def make_parser():
     Returns:
         The command line parser.
     """
-    parser = argparse.ArgumentParser(description='%s: run all or some tests for the CySparse library' % os.path.basename(sys.argv[0]))
-    parser.add_argument("-r", "--rebuild", help="Rebuild from scratch the CySparse library", action='store_true', required=False)
-    parser.add_argument("-b", "--build", help="Build (if needed) CySparse library with new code", action='store_true', required=False)
-    parser.add_argument("-p", "--pattern", help="Run tests with a given filename pattern", required=False)
+    parser = argparse.ArgumentParser(description='%s: run all tests' % os.path.basename(sys.argv[0]))
+    parser.add_argument("-g", "--generate", help="Generate librairy", action='store_true', default=False, required=False)
     parser.add_argument("-v", "--verbose", help="Add some context on the console", action='store_true', required=False)
     parser.add_argument("-n", "--dont_use_nose", help="Use unittest discover instead of nosetests", action='store_true', required=False)
 
@@ -39,20 +37,17 @@ def make_parser():
 
 def generate_lib():
     subprocess.call(['python', 'generate_code.py'])
+
+def build_lib():
     subprocess.call(['python', 'setup.py', 'build'])
 
-
-def launch_nosetests(pattern=None, verbose=False, use_libraries=None):
+def launch_nosetests(verbose=False, use_libraries=None):
     current_dir = os.getcwd()
     os.chdir(lib_dir)
 
     commands_list = ['nosetests']
     if verbose:
         commands_list.append('--verbosity=2')
-
-    if pattern is not None:
-        commands_list.append('-p')
-        commands_list.append(pattern)
 
     commands_list.append('tests')
 
@@ -63,7 +58,7 @@ def launch_nosetests(pattern=None, verbose=False, use_libraries=None):
     os.chdir(current_dir)
 
 
-def launch_unittest(pattern=None, verbose=False):
+def launch_unittest(verbose=False):
     current_dir = os.getcwd()
     os.chdir(lib_dir)
 
@@ -71,9 +66,6 @@ def launch_unittest(pattern=None, verbose=False):
 
     if verbose:
         commands_list.append('-v')
-    if pattern is not None:
-        commands_list.append('-p')
-        commands_list.append(pattern)
 
     if verbose:
         print("launch command: '%s':" % " ".join(commands_list))
@@ -104,14 +96,20 @@ if __name__ == "__main__":
     if arg_options.verbose:
         print("done")
 
+    if arg_options.generate:
+        if arg_options.verbose:
+            print("Generating lib...",)
+        generate_lib()
+        if arg_options.verbose:
+            print("done")
+
     if arg_options.verbose:
-        print("Generating lib...",)
-    generate_lib()
+        print("Building lib...",)
+    build_lib()
     if arg_options.verbose:
         print("done")
 
-
     if arg_options.dont_use_nose:
-        launch_unittest(arg_options.pattern, arg_options.verbose)
+        launch_unittest(arg_options.verbose)
     else:
-        launch_nosetests(arg_options.pattern, arg_options.verbose)
+        launch_nosetests(arg_options.verbose)
