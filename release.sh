@@ -1,11 +1,11 @@
 #!/bin/sh
 #
 # Runs before git flow release finish
-to_branch = "without-cython"
+tobranch="without-cython"
 
-git branch -D $to_branch
-git push origin --delete $to_branch
-git checkout -b $to_branch
+git branch -D $tobranch
+git push origin --delete $tobranch
+git checkout -b $tobranch
 
 git rm --cached \*.cpy
 git rm --cached \*.cpx
@@ -34,5 +34,5 @@ git add setup.py
 git add --all
 
 git commit -m "c files from last commit in develop"
-git push --set-upstream origin $to_branch
+git push --set-upstream origin $tobranch
 git checkout develop
