@@ -12,7 +12,8 @@ __pycache__/
 *.pyx
 *.pxd
 setup.py
-qr_mumps/qr_mumps_context.py
+qr_mumps/solver.py
+tests/*.py
 *.c
 # QR_MUMPS related
 trace.svg
