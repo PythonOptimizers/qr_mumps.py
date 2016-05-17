@@ -176,7 +176,7 @@ with open(path.join(here, 'DESCRIPTION.rst'), encoding='utf-8') as f:
 setup_args = {
       'name' : 'qr_mumps.py',
       'version' : version['version'],
-      'description' : 'A python interface to qr_mumps',
+      'description' : 'A Cython/Python interface to the qr_mumps solver.',
       'long_description' : long_description,
       #Author details
 {% raw %}
@@ -186,8 +186,7 @@ setup_args = {
 {% raw %}
       'maintainer_email' : "sylvain.arreckx@gmail.com",
 {% endraw %}
-      'summary' : "A Cython/Python interface to the qr_mumps solver.",
-      'url' : "https://github.com/PythonOptimizers/qr_mumps.py.git",
+      'url' : "https://github.com/PythonOptimizers/qr_mumps.py",
       'download_url' : "https://github.com/PythonOptimizers/qr_mumps.py.git",
       'license' : 'LGPL',
       'classifiers' : filter(None, CLASSIFIERS.split('\n')),

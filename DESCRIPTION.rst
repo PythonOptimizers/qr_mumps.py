@@ -1,13 +1,33 @@
-A sample Python project
-=======================
+qr_mumps.py
+===========
 
-This is the description file for the project.
+Cython/Python inferface to qr_mumps (`A multithreaded multifrontal QR solver <http://buttari.perso.enseeiht.fr/qr_mumps/>`_).
 
-The file should use UTF-8 encoding and be written using ReStructured Text. It
-will be used to generate the project webpage on PyPI, and should be written for
-that purpose.
+It supports all four types supported by qr_mumps (single real, double real, single complex and double complex).
 
-Typical contents for this file would include an overview of the project, basic
-usage examples, etc. Generally, including the project changelog in here is not
-a good idea, although a simple "What's New" section for the most recent version
-may be appropriate.
+Dependencies
+------------
+
+For the common user (Python version):
+
+- `Numpy <http://www.numpy.org>`_
+
+For the advanced user (Cython version), include everything needed for the Python version and add:
+
+- `Cython <https://github.com/cython/cython.git>`_
+- `cygenja <https://github.com/PythonOptimizers/cygenja.git>`_
+
+If you intend to generate the documention:
+
+- Sphinx
+- sphinx_bootstrap_theme.
+
+To run the tests:
+
+- nose.
+
+Optional dependencies
+---------------------
+
+`qr_mumps.py` provides facilities for sparse matrices coming from the `CySparse <https://github.com/PythonOptimizers/cysparse>`_ library.
+If you want to use these facilities, set the location of the `CySparse` library in your `site.cfg` file.

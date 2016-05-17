@@ -1,5 +1,6 @@
 version = '0.3.0'
-release = True
+release = False
 
 if not release:
-    version += '-dev'
+    s = version.split('.')
+    version = s[0]+'.'+s[1]+'.'+'dev'+s[2]
