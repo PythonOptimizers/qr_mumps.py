@@ -17,6 +17,6 @@ script:
     - python examples/qr_mumps_numpy_double.py
     - python examples/qr_mumps_numpy_complex.py
     - python examples/qr_mumps_numpy_loop_multiple_rhs.py
-    - python examples/qr_mumps_cysparse_double.py examples/bcsstk01.mtx
-    - python examples/qr_mumps_cysparse_double.py examples/illc1033.mtx
-    - python examples/qr_mumps_cysparse_complex.py examples/conf5.0-00l4x4-1000.mtx
+    # - python examples/qr_mumps_cysparse_double.py examples/bcsstk01.mtx
+    # - python examples/qr_mumps_cysparse_double.py examples/illc1033.mtx
+    # - python examples/qr_mumps_cysparse_complex.py examples/conf5.0-00l4x4-1000.mtx
