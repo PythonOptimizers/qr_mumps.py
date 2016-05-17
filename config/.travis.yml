@@ -1,15 +1,22 @@
-language: 
+language:
     - objective-c
 os:
     - osx
 before_install:
     - brew update
     - brew install homebrew/science/qr_mumps
-install: 
+install:
     - pip install virtualenv
     - virtualenv ~/.venv
     - source ~/.venv/bin/activate
     - cp site.template.cfg site.cfg
     - "pip install -r requirements.txt && python setup.py install"
     - pip install nose
-script: python run_tests.py
+script:
+    - python run_tests.py
+    - python examples/qr_mumps_numpy_double.py
+    - python examples/qr_mumps_numpy_complex.py
+    - python examples/qr_mumps_numpy_loop_multiple_rhs.py
+    - python examples/qr_mumps_cysparse_double.py examples/bcsstk01.mtx
+    - python examples/qr_mumps_cysparse_double.py examples/illc1033.mtx
+    - python examples/qr_mumps_cysparse_complex.py examples/conf5.0-00l4x4-1000.mtx
