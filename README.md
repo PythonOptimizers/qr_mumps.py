@@ -10,21 +10,23 @@ It supports all four types (single real, double real, single complex and double 
 
 For the Python version:
 
-- [`Numpy`](http://www.numpy.org) 
+- [`Numpy`](http://www.numpy.org)
 
 For the Cython version, include everything needed for the Python version and add:
 
 - [`Cython`](https://github.com/cython/cython.git)
 - [`cygenja`](https://github.com/PythonOptimizers/cygenja.git)
 
-If you intend to generate the documention:
+If you intend to generate the documentation:
 
 - Sphinx
 - sphinx_bootstrap_theme.
 
 To run the tests:
 
-- nose.
+- pytest.
+
+All previous dependencies may be installed using `pip`.
 
 ## Optional dependencies
 
@@ -35,28 +37,33 @@ If you want to use these facilities, set the location of the `CySparse` library 
 ## Installation
 
 1. You need to install qr_mumps. Follow instructions on [their website](http://buttari.perso.enseeiht.fr/qr_mumps/).
-       If you are under OS X, a [Homebrew](http://brew.sh) formula is available. Follow the instructions to install Homebrew.
+       If you are under OS X, a [Homebrew](http://brew.sh) formula is available. Follow the instructions to install `Homebrew`.
        Then, qr_mumps and its dependencies can be installed automatically in `/usr/local` by typing
 
-    	brew tap homebrew/science
+    brew tap homebrew/science
 
-    	brew install qr_mumps
+    brew install qr_mumps
 
 2. Clone this repo
 
 3. Copy `site.template.cfg` to `site.cfg` and modify `site.cfg` to match your configuration
-    
+
 3. Install `qr_mumps.py`
 
    - Python version
 
-	        python setup.py install
+        python setup.py install
 
    - Cython version
 
-            python generate_code.py
-    	    python setup.py build
-    	    python setup.py install
+        python generate_code.py
+        python setup.py build
+        python setup.py install
+
+## Running tests
+
+    py.test tests
+
 
 ## Running examples
 
@@ -64,6 +71,10 @@ If you want to use these facilities, set the location of the `CySparse` library 
 
   - [ ] Add refine method
   - [ ] Add a Q-less derived class
-  - [ ] Update examples
-  - [ ] Update docstrings
+  - [x] Update examples
+  - [x] Update doc-strings
   - [ ] ensure all code is PEP8 and PEP257 compliant
+
+## License
+
+[![LGPLv3.0](https://www.gnu.org/graphics/lgplv3-147x51.png)](https://www.gnu.org/licenses/lgpl-3.0.html)
