@@ -194,6 +194,8 @@ setup_args = {
       'ext_modules' : qr_mumps_ext,
       'package_dir' : {"qr_mumps": "qr_mumps"},
       'packages' : packages_list,
+      'tests_requires' : ['pytest'],
+      'setup_requires' : ['pytest-runner'],
       'zip_safe' : False}
 
 if use_cython:

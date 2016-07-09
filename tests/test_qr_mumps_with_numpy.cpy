@@ -7,7 +7,8 @@ and on symmetric and general matrices.
 
 from qr_mumps.solver import QRMUMPSSolver
 import numpy as np
-from numpy.testing import *
+import pytest
+from unittest import TestCase
 import sys
 
 
@@ -24,30 +25,34 @@ class NumpyQRMUMPSSolverTestCaseMoreLinesThanColumns_@index_type@_@element_type@
 
     def test_init(self):
         solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
-        assert_equal(self.n, solver.n)
+        assert self.n == solver.n
 
     def test_number_of_args(self):
-        assert_raises(ValueError, QRMUMPSSolver, (self.m, self.n, self.arow, self.acol, self.aval, 1))
-        assert_raises(TypeError, QRMUMPSSolver, self.m)
+	with pytest.raises(ValueError):
+            solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval, 1))
+	with pytest.raises(TypeError):
+            solver = QRMUMPSSolver(self.m)
 
     def test_entry_index_types(self):
         self.acol = np.array([0,0,0,1,1,2,2,2,2,3,3,4,4], dtype=np.float128)
-        assert_raises(TypeError, QRMUMPSSolver, (self.m, self.n, self.arow, self.acol, self.aval))
+        with pytest.raises(TypeError):
+	    solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval))
 
     def test_entry_element_types(self):
         self.aval = np.array([0.7,0.6,0.4,0.1,0.1,0.3,0.6,0.7,0.2,0.5,0.2,0.1,0.6], dtype=np.float128)
-        assert_raises(TypeError, QRMUMPSSolver, (self.m, self.n, self.arow, self.acol, self.aval))
+        with pytest.raises(TypeError):
+            solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval))
 
     def test_analyze(self):
         solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
         solver.analyze()
-        assert(solver.analyzed==True)
+        assert solver.analyzed==True
 
     def test_factorize(self):
         solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
         solver.factorize()
-        assert(solver.analyzed==True)
-        assert(solver.factorized==True)
+        assert solver.analyzed is True
+        assert solver.factorized is True
 
     def test_dense_solve_single_rhs(self):
         solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
@@ -55,7 +60,7 @@ class NumpyQRMUMPSSolverTestCaseMoreLinesThanColumns_@index_type@_@element_type@
         e = np.ones(self.n, dtype=np.@element_type|lower@)
         rhs = np.dot(self.A, e)
         x = solver.solve(rhs)
-        assert_almost_equal(x, e, 5)
+        assert np.allclose(x, e, 1e-5)
 
     def test_dense_solve_multiple_rhs(self):
         solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
@@ -65,21 +70,22 @@ class NumpyQRMUMPSSolverTestCaseMoreLinesThanColumns_@index_type@_@element_type@
         B[: ,2] = 3 * B[:,2]
         rhs = np.dot(self.A,B)
         x = solver.solve(rhs)
-        assert_almost_equal(x, B, 5)
+        assert np.allclose(x, B, 1e-5)
 
     def test_dense_least_squares_multiple_rhs(self):
         solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
         B = np.ones([self.n, 3], dtype=np.@element_type|lower@)
-        B[: ,1] = 2 * B[:,1]
-        B[: ,2] = 3 * B[:,2]
+        B[:, 1] = 2 * B[:, 1]
+        B[:, 2] = 3 * B[:, 2]
         rhs = np.dot(self.A, B)
         x = solver.least_squares(rhs)
-        assert_almost_equal(x, B, 5)
+        assert np.allclose(x, B, 1e-5)
 
     def test_dense_least_squares_wrong_size_rhs(self):
         solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
         rhs = np.ones([self.m+1, 1], dtype=np.@element_type|lower@)
-        assert_raises(ValueError, solver.least_squares, rhs)
+	with pytest.raises(ValueError):
+            x = solver.least_squares(rhs)
 
     def test_dense_minimum_norm_multiple_rhs(self):
         solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
@@ -87,7 +93,8 @@ class NumpyQRMUMPSSolverTestCaseMoreLinesThanColumns_@index_type@_@element_type@
         B[: ,1] = 2 * B[:,1]
         B[: ,2] = 3 * B[:,2]
         rhs = np.dot(self.A, B)
-        assert_raises(RuntimeError, solver.minimum_norm, rhs)
+	with pytest.raises(RuntimeError):
+            x = solver.minimum_norm(rhs)
 
 
 class NumpyQRMUMPSSolverTestCaseMoreColumnsThanLines_@index_type@_@element_type@(TestCase):
@@ -101,19 +108,19 @@ class NumpyQRMUMPSSolverTestCaseMoreColumnsThanLines_@index_type@_@element_type@
 
     def test_init(self):
         solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
-        assert_equal(self.n, solver.n)
-        assert_equal(self.m, solver.m)
+        assert self.n == solver.n
+        assert self.m == solver.m
 
     def test_analyze(self):
         solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
         solver.analyze()
-        assert(solver.analyzed==True)
+        assert solver.analyzed==True
 
     def test_factorize(self):
         solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
         solver.factorize()
-        assert(solver.analyzed==True)
-        assert(solver.factorized==True)
+        assert solver.analyzed==True
+        assert solver.factorized==True
 
     def test_dense_solve_single_rhs(self):
         solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
@@ -121,7 +128,7 @@ class NumpyQRMUMPSSolverTestCaseMoreColumnsThanLines_@index_type@_@element_type@
         e = np.ones(self.n, dtype=np.@element_type|lower@)
         rhs = np.dot(self.A, e)
         x = solver.solve(rhs)
-        assert_almost_equal(np.dot(self.A,x), rhs, 5)
+        assert np.allclose(np.dot(self.A,x), rhs, 1e-5)
 
     def test_dense_solve_multiple_rhs(self):
         solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
@@ -131,17 +138,19 @@ class NumpyQRMUMPSSolverTestCaseMoreColumnsThanLines_@index_type@_@element_type@
         B[: ,2] = 3 * B[:,2]
         rhs = np.dot(self.A,B)
         x = solver.solve(rhs)
-        assert_almost_equal(np.dot(self.A,x), rhs, 5)
+        assert np.allclose(np.dot(self.A,x), rhs, 1e-5)
 
     def test_least_squares(self):
         solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
         rhs = np.ones([self.m, 1], dtype=np.@element_type|lower@)
-        assert_raises(RuntimeError, solver.least_squares, rhs)
+	with pytest.raises(RuntimeError):
+            x = solver.least_squares(rhs)
           
     def test_dense_minimum_norm_wrong_size_rhs(self):
         solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
         rhs = np.ones([self.m+1, 1], dtype=np.@element_type|lower@)
-        assert_raises(ValueError, solver.minimum_norm, rhs)
+	with pytest.raises(ValueError):
+            x = solver.minimum_norm(rhs)
 
     def test_dense_minimum_norm_multiple_rhs(self):
         solver = QRMUMPSSolver((self.m, self.n, self.arow, self.acol, self.aval), verbose=False)
@@ -150,12 +159,9 @@ class NumpyQRMUMPSSolverTestCaseMoreColumnsThanLines_@index_type@_@element_type@
         B[: ,2] = 3 * B[:,2]
         rhs = np.dot(self.A, B)
         x = solver.minimum_norm(rhs)
-        assert_almost_equal(np.dot(self.A,x), rhs, 5)
+        assert np.allclose(np.dot(self.A,x), rhs, 1e-5)
 
 
 
   {% endfor %}
 {% endfor %}
-
-if __name__ == "__main__":
-      run_module_suite()
