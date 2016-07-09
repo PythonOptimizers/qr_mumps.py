@@ -1,5 +1,6 @@
 # configuration file
 site.cfg
+release.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
