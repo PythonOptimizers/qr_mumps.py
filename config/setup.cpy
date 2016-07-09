@@ -144,7 +144,7 @@ if build_cysparse_ext:
 {% endfor %}
 
 
-packages_list = ['qr_mumps', 'qr_mumps.src', 'tests']
+packages_list = ['qr_mumps', 'qr_mumps.src']
 
 
 # PACKAGE PREPARATION FOR EXCLUSIVE C EXTENSIONS
