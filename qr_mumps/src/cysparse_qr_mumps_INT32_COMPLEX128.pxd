@@ -1,0 +1,6 @@
+from cysparse.sparse.ll_mat_matrices.ll_mat_INT32_t_COMPLEX128_t cimport LLSparseMatrix_INT32_t_COMPLEX128_t
+
+from qr_mumps.src.qr_mumps_INT32_COMPLEX128 cimport BaseQRMUMPSSolver_INT32_COMPLEX128
+
+cdef class CySparseQRMUMPSSolver_INT32_COMPLEX128(BaseQRMUMPSSolver_INT32_COMPLEX128):
+    cpdef get_matrix_data(self, LLSparseMatrix_INT32_t_COMPLEX128_t A)

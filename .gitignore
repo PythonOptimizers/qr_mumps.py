@@ -1,21 +1,20 @@
 # configuration file
 site.cfg
-release.sh
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 
+config
+generate_code.py
+release.sh
+
 # C extensions
 *.so
+*.cpx
+*.cpd
+*.cpy
 
-# Generated files
-*.pyx
-*.pxd
-setup.py
-qr_mumps/solver.py
-tests/*.py
-*.c
 # QR_MUMPS related
 trace.svg
 

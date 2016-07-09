@@ -1,18 +1,18 @@
-from cysparse.sparse.ll_mat_matrices.ll_mat_@index@_t_@type@_t cimport LLSparseMatrix_@index@_t_@type@_t
+from cysparse.sparse.ll_mat_matrices.ll_mat_INT32_t_FLOAT32_t cimport LLSparseMatrix_INT32_t_FLOAT32_t
 from cysparse.common_types.cysparse_types cimport *
 
-from qr_mumps.src.qr_mumps_@index@_@type@ cimport BaseQRMUMPSSolver_@index@_@type@, c_to_fortran_index_array
+from qr_mumps.src.qr_mumps_INT32_FLOAT32 cimport BaseQRMUMPSSolver_INT32_FLOAT32, c_to_fortran_index_array
 
 from cpython.mem cimport PyMem_Malloc, PyMem_Free
 
 from libc.stdint cimport int64_t
 from libc.string cimport strncpy
 
-cdef class CySparseQRMUMPSSolver_@index@_@type@(BaseQRMUMPSSolver_@index@_@type@):
+cdef class CySparseQRMUMPSSolver_INT32_FLOAT32(BaseQRMUMPSSolver_INT32_FLOAT32):
     """
     QR_MUMPS Context.
 
-    This version **only** deals with ``LLSparseMatrix_@index@_t_@type@_t`` objects.
+    This version **only** deals with ``LLSparseMatrix_INT32_t_FLOAT32_t`` objects.
 
     We follow the common use of QR_MUMPS. In particular, we use the same names for the methods of this
     class as their corresponding counter-parts in QR_MUMPS.
@@ -32,10 +32,10 @@ cdef class CySparseQRMUMPSSolver_@index@_@type@(BaseQRMUMPSSolver_@index@_@type@
         PyMem_Free(self.params.jcn)
         PyMem_Free(self.params.val)
 
-    cpdef get_matrix_data(self, LLSparseMatrix_@index@_t_@type@_t A):
+    cpdef get_matrix_data(self, LLSparseMatrix_INT32_t_FLOAT32_t A):
         """
         Args:
-            A: :class:`LLSparseMatrix_@index@_t_@type@_t` object.
+            A: :class:`LLSparseMatrix_INT32_t_FLOAT32_t` object.
 
         Note: we keep the same name for this method in all derived classes.
         """
@@ -50,18 +50,11 @@ cdef class CySparseQRMUMPSSolver_@index@_@type@(BaseQRMUMPSSolver_@index@_@type@
         print A
 
         # allocate memory for irn and jcn
-        self.params.irn = <@index|generic_to_c_type@ *> PyMem_Malloc(self.nnz * sizeof(@index|generic_to_c_type@))
-        self.params.jcn = <@index|generic_to_c_type@ *> PyMem_Malloc(self.nnz * sizeof(@index|generic_to_c_type@))
+        self.params.irn = <int *> PyMem_Malloc(self.nnz * sizeof(int))
+        self.params.jcn = <int *> PyMem_Malloc(self.nnz * sizeof(int))
 
-{% if type in complex_list %} 
-        a_val = <@type@_t *> PyMem_Malloc(self.nnz * sizeof(@type@_t))
-        A.fill_triplet(self.params.irn, self.params.jcn, a_val)
-        self.params.val = <@type|generic_to_c_type@ *> a_val
-{% else %}
-        self.params.val = <@type@_t *> PyMem_Malloc(self.nnz * sizeof(@type@_t))
+        self.params.val = <FLOAT32_t *> PyMem_Malloc(self.nnz * sizeof(FLOAT32_t))
         A.fill_triplet(self.params.irn, self.params.jcn, self.params.val)
-{% endif %}
 
         # convert irn and jcn indices to Fortran format
         self.index_to_fortran()
-

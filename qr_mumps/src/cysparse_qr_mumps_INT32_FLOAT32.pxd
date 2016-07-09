@@ -1,0 +1,6 @@
+from cysparse.sparse.ll_mat_matrices.ll_mat_INT32_t_FLOAT32_t cimport LLSparseMatrix_INT32_t_FLOAT32_t
+
+from qr_mumps.src.qr_mumps_INT32_FLOAT32 cimport BaseQRMUMPSSolver_INT32_FLOAT32
+
+cdef class CySparseQRMUMPSSolver_INT32_FLOAT32(BaseQRMUMPSSolver_INT32_FLOAT32):
+    cpdef get_matrix_data(self, LLSparseMatrix_INT32_t_FLOAT32_t A)
