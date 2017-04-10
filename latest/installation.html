@@ -1,0 +1,314 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Installation &mdash; qr_mumps.py</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/julia.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="qr_mumps.py" href="index.html"/>
+        <link rel="next" title="API" href="solvers.html"/>
+        <link rel="prev" title="Introduction" href="introduction.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="contents.html" class="icon icon-home"> qr_mumps.py
+          
+
+          
+          </a>
+          <h1>qr_mumps.py</h1>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+              <ul>
+<li><a class="reference internal" href="#">Installation</a><ul>
+<li><a class="reference internal" href="#qr-mumps-source-code"><strong class="program">qr_mumps</strong> source code</a></li>
+<li><a class="reference internal" href="#python-interfaces"><strong class="program">Python</strong> interfaces</a></li>
+<li><a class="reference internal" href="#optional-dependency">Optional dependency</a></li>
+<li><a class="reference internal" href="#further-dependencies">Further dependencies</a><ul>
+<li><a class="reference internal" href="#documentation">Documentation</a></li>
+<li><a class="reference internal" href="#testing">Testing</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="contents.html">qr_mumps.py</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="contents.html">Docs</a> &raquo;</li>
+        
+      <li>Installation</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/PythonOptimizers/qr_mumps.py/blob/master/doc/source/installation.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p><strong class="program">qr_mumps.py</strong> uses external packages that are not included in the <strong class="program">qr_mumps.py</strong>
+source code because they are released under different licenses than the one used for
+<strong class="program">qr_mumps.py</strong>. Hence we cannot distribute their code and you have to obtain them yourself.</p>
+<div class="section" id="qr-mumps-source-code">
+<h2><strong class="program">qr_mumps</strong> source code<a class="headerlink" href="#qr-mumps-source-code" title="Permalink to this headline">¶</a></h2>
+<p>You need to install <strong class="program">qr_mumps</strong>.
+Follow instructions on <a class="reference external" href="http://buttari.perso.enseeiht.fr/qr_mumps/">their website</a>.</p>
+<p>If you are under <strong>OS X</strong>, a <a class="reference external" href="http://brew.sh">Homebrew</a> formula is available.
+Follow the instructions to install <strong class="program">Homebrew</strong>.
+Then, <strong class="program">qr_mumps</strong> and its dependencies can be installed automatically in <cite>/usr/local</cite> by typing</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>brew tap homebrew/science
+
+brew install qr_mumps
+</pre></div>
+</div>
+</div></blockquote>
+<p><strong class="program">qr_mumps</strong> supports several permutation methods (ordering methods) through third party packages:
+<strong class="program">COLAMD</strong> (not supported in the <strong class="program">Homebrew</strong> formula), <strong class="program">SCOTCH</strong> (add the <cite>with-scotch5</cite>) and <strong class="program">Metis</strong> (default on <strong class="program">Homebrew</strong>).</p>
+</div>
+<div class="section" id="python-interfaces">
+<h2><strong class="program">Python</strong> interfaces<a class="headerlink" href="#python-interfaces" title="Permalink to this headline">¶</a></h2>
+<p><strong class="program">qr_mumps.py</strong> installation is done in few simple steps:</p>
+<ol class="arabic simple">
+<li>Clone the repository:</li>
+</ol>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>git clone https://github.com/PythonOptimizers/qr_mumps.py.git
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic simple" start="2">
+<li>Install the <strong class="program">Python</strong> dependency:</li>
+</ol>
+<ul>
+<li><p class="first"><strong class="program">NumPy</strong></p>
+<p>Python installer <strong class="program">pip</strong> is recommended for that</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>pip install numpy
+</pre></div>
+</div>
+</li>
+</ul>
+<ol class="arabic simple" start="3">
+<li>Copy <code class="file docutils literal"><span class="pre">site.template.cfg</span></code> to <code class="file docutils literal"><span class="pre">site.cfg</span></code> and adjust it to reflect your own environment</li>
+<li>Compile and install the library:</li>
+</ol>
+<blockquote>
+<div><p>The preferred way to install the library is to install it in its own <cite>virtualenv</cite>.</p>
+<p>To compile and install the library, just type</p>
+<blockquote>
+<div><div class="highlight-bash"><div class="highlight"><pre><span></span>python setup.py install
+</pre></div>
+</div>
+</div></blockquote>
+</div></blockquote>
+</div>
+<div class="section" id="optional-dependency">
+<h2>Optional dependency<a class="headerlink" href="#optional-dependency" title="Permalink to this headline">¶</a></h2>
+<p><strong class="program">qr_mumps.py</strong> provides facilities for sparse matrices coming from the <a class="reference external" href="https://github.com/PythonOptimizers/cysparse">CySparse</a> library.
+If you want to use these facilities, set the location of the <strong class="program">CySparse</strong> library in your <cite>site.cfg</cite> file.</p>
+</div>
+<div class="section" id="further-dependencies">
+<h2>Further dependencies<a class="headerlink" href="#further-dependencies" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="documentation">
+<h3>Documentation<a class="headerlink" href="#documentation" title="Permalink to this headline">¶</a></h3>
+<p>To generate the documentation you will need other Python dependencies:</p>
+<ul class="simple">
+<li><strong class="program">Sphinx</strong></li>
+<li><strong class="program">sphinx-bootstrap-theme</strong></li>
+</ul>
+<p>which can be easily installed using <strong class="program">pip</strong></p>
+</div>
+<div class="section" id="testing">
+<h3>Testing<a class="headerlink" href="#testing" title="Permalink to this headline">¶</a></h3>
+<p>Testing is done using <strong class="program">nose</strong>, so it needs to be installed before running them.</p>
+<p>Note that a complete list of dependencies is provided in the <code class="file docutils literal"><span class="pre">requirements.txt</span></code> file. You can easily install all of them with:</p>
+<div class="highlight-bash"><div class="highlight"><pre><span></span>pip install -r requirements.txt
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="solvers.html" class="btn btn-neutral float-right" title="API" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="introduction.html" class="btn btn-neutral" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Sylvain Arreckx, Dominique Orban and Nikolaj van Omme.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>

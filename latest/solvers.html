@@ -1,0 +1,432 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>API &mdash; qr_mumps.py</title>
+  
+
+  
+  
+
+  
+  <link href='https://fonts.googleapis.com/css?family=Lato:400,700|Roboto+Slab:400,700|Inconsolata:400,700' rel='stylesheet' type='text/css'>
+
+  
+  
+    
+
+  
+
+  
+  
+    <link rel="stylesheet" href="_static/julia.css" type="text/css" />
+  
+
+  
+
+  
+        <link rel="index" title="Index"
+              href="genindex.html"/>
+        <link rel="search" title="Search" href="search.html"/>
+    <link rel="top" title="qr_mumps.py" href="index.html"/>
+        <link rel="prev" title="Installation" href="installation.html"/> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="contents.html" class="icon icon-home"> qr_mumps.py
+          
+
+          
+          </a>
+          <h1>qr_mumps.py</h1>
+
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+              <ul>
+<li><a class="reference internal" href="#">API</a><ul>
+<li><a class="reference internal" href="#example">Example</a><ul>
+<li><a class="reference internal" href="#using-numpy-arrays">Using <strong class="program">Numpy</strong> arrays</a></li>
+<li><a class="reference internal" href="#using-cysparse-matrix">Using <strong class="program">CySparse</strong> matrix</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" role="navigation" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="contents.html">qr_mumps.py</a>
+        
+      </nav>
+
+
+      
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="contents.html">Docs</a> &raquo;</li>
+        
+      <li>API</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            
+              <a href="https://github.com/PythonOptimizers/qr_mumps.py/blob/master/doc/source/solvers.rst" class="fa fa-github"> Edit on GitHub</a>
+            
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-qr_mumps.src.qr_mumps_INT32_FLOAT64">
+<span id="api"></span><span id="solver-page"></span><h1>API<a class="headerlink" href="#module-qr_mumps.src.qr_mumps_INT32_FLOAT64" title="Permalink to this headline">¶</a></h1>
+<p>This is the interface to qr_mumps</p>
+<dl class="class">
+<dt id="qr_mumps.src.qr_mumps_INT32_FLOAT64.BaseQRMUMPSSolver_INT32_FLOAT64">
+<em class="property">class </em><code class="descclassname">qr_mumps.src.qr_mumps_INT32_FLOAT64.</code><code class="descname">BaseQRMUMPSSolver_INT32_FLOAT64</code><a class="headerlink" href="#qr_mumps.src.qr_mumps_INT32_FLOAT64.BaseQRMUMPSSolver_INT32_FLOAT64" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Base QR_MUMPS Context.</p>
+<p>This version <strong>only</strong> deals with pointers.</p>
+<p>We follow the common use of QR_MUMPS. In particular, we use the same names for
+the methods of this class as their corresponding counter-parts in QR_MUMPS.</p>
+<dl class="method">
+<dt id="qr_mumps.src.qr_mumps_INT32_FLOAT64.BaseQRMUMPSSolver_INT32_FLOAT64.analyze">
+<code class="descname">analyze</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qr_mumps.src.qr_mumps_INT32_FLOAT64.BaseQRMUMPSSolver_INT32_FLOAT64.analyze" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs analysis step of QR_MUMPS.</p>
+<p>TODO: ordering</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="qr_mumps.src.qr_mumps_INT32_FLOAT64.BaseQRMUMPSSolver_INT32_FLOAT64.factorize">
+<code class="descname">factorize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qr_mumps.src.qr_mumps_INT32_FLOAT64.BaseQRMUMPSSolver_INT32_FLOAT64.factorize" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform the QR factorization of the matrix A or A&#8217;.</p>
+<p>This factorization can then later be used to solve a linear system
+with <cite>solve</cite>. Statistical data of the factorization is stored in
+<cite>factorization_stats</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>ordering</strong> &#8211; { &#8216;auto&#8217;, &#8216;amd&#8217;, &#8216;amf&#8217;, &#8216;scotch&#8217;, &#8216;pord&#8217;, &#8216;metis&#8217;, &#8216;qamd&#8217; }
+ordering to use in the factorization. The availability of a
+particular ordering depends on the MUMPS installation.  Default is
+&#8216;auto&#8217;.</li>
+<li><strong>pivot_tol</strong> &#8211; number in the range [0, 1]
+pivoting threshold. Pivoting is typically limited in sparse
+solvers, as too much pivoting destroys sparsity. 1.0 means full
+pivoting, whereas 0.0 means no pivoting. Default is 0.01.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="qr_mumps.src.qr_mumps_INT32_FLOAT64.BaseQRMUMPSSolver_INT32_FLOAT64.refine">
+<code class="descname">refine</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qr_mumps.src.qr_mumps_INT32_FLOAT64.BaseQRMUMPSSolver_INT32_FLOAT64.refine" title="Permalink to this definition">¶</a></dt>
+<dd><p>Let x be the initial solution of Ax = b
+Compute residual r = b - Ax
+for i = 1 to t do</p>
+<blockquote>
+<div>Solve A Dx = r using the computed factorization
+x = x + Dx
+r = b - Ax</div></blockquote>
+<p>end for</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="qr_mumps.src.qr_mumps_INT32_FLOAT64.BaseQRMUMPSSolver_INT32_FLOAT64.set_silent">
+<code class="descname">set_silent</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qr_mumps.src.qr_mumps_INT32_FLOAT64.BaseQRMUMPSSolver_INT32_FLOAT64.set_silent" title="Permalink to this definition">¶</a></dt>
+<dd><p>Silence <strong>all</strong> QR_MUMPS output.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="qr_mumps.src.qr_mumps_INT32_FLOAT64.BaseQRMUMPSSolver_INT32_FLOAT64.solve">
+<code class="descname">solve</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#qr_mumps.src.qr_mumps_INT32_FLOAT64.BaseQRMUMPSSolver_INT32_FLOAT64.solve" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>rhs</strong> &#8211; dense NumPy array (matrix or vector).</li>
+<li><strong>compute_residuals</strong> &#8211; boolean to compute the scaled norm of the residual (i.e. the normwise backward error).</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">Dense NumPy array <code class="docutils literal"><span class="pre">x</span></code> (matrix or vector) with the solution(s) of the linear system
+or
+a tuple containing the solutions of the linear system and the scaled norm of the residual.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<div class="section" id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="using-numpy-arrays">
+<h3>Using <strong class="program">Numpy</strong> arrays<a class="headerlink" href="#using-numpy-arrays" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">qr_mumps.solver</span> <span class="k">import</span> <span class="n">QRMUMPSSolver</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">m</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">4</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">],</span>
+              <span class="p">[</span><span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">]],</span>
+             <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">arow</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+<span class="n">acol</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+<span class="n">aval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">9</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+                <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+
+
+<span class="nb">print</span> <span class="s2">&quot;A:&quot;</span>
+<span class="nb">print</span> <span class="n">A</span>
+
+<span class="n">solver</span> <span class="o">=</span> <span class="n">QRMUMPSSolver</span><span class="p">((</span><span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">arow</span><span class="p">,</span> <span class="n">acol</span><span class="p">,</span> <span class="n">aval</span><span class="p">),</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">solver</span><span class="o">.</span><span class="n">analyze</span><span class="p">()</span>
+
+<span class="n">solver</span><span class="o">.</span><span class="n">factorize</span><span class="p">()</span>
+
+<span class="nb">print</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Solving Ax = b where b is a vector&quot;</span>
+<span class="n">e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+<span class="nb">print</span> <span class="s2">&quot;b:&quot;</span>
+<span class="nb">print</span> <span class="n">b</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_almost_equal</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+<span class="nb">print</span> <span class="s2">&quot;x: it should be a vector of ones&quot;</span>
+<span class="nb">print</span> <span class="n">x</span>
+
+
+<span class="nb">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="nb">print</span> <span class="s2">&quot;Solving Ax = B where B is a matrix&quot;</span>
+
+<span class="n">E</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">n</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+<span class="n">E</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">E</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">E</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">E</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">E</span><span class="p">)</span>
+<span class="nb">print</span> <span class="s2">&quot;B:&quot;</span>
+<span class="nb">print</span> <span class="n">B</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_almost_equal</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">E</span><span class="p">)</span>
+<span class="nb">print</span> <span class="s2">&quot;x: it should be the m x 3 matrix &quot;</span>
+<span class="nb">print</span> <span class="s2">&quot;   with 1 on the first column, 2 on the second and 3 on the third.&quot;</span>
+<span class="nb">print</span> <span class="n">x</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="using-cysparse-matrix">
+<h3>Using <strong class="program">CySparse</strong> matrix<a class="headerlink" href="#using-cysparse-matrix" title="Permalink to this headline">¶</a></h3>
+<div class="highlight-default"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">cysparse.sparse.ll_mat</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">import</span> <span class="nn">cysparse.common_types.cysparse_types</span> <span class="k">as</span> <span class="nn">types</span>
+
+<span class="kn">from</span> <span class="nn">qr_mumps.solver</span> <span class="k">import</span> <span class="n">QRMUMPSSolver</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">import</span> <span class="nn">sys</span>
+
+<span class="c1"># Read Matrix in Matrix Market format from command line argument</span>
+<span class="n">A</span> <span class="o">=</span> <span class="n">LLSparseMatrix</span><span class="p">(</span><span class="n">mm_filename</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+                   <span class="n">itype</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">INT32_T</span><span class="p">,</span>
+                   <span class="n">dtype</span><span class="o">=</span><span class="n">types</span><span class="o">.</span><span class="n">FLOAT64_T</span><span class="p">)</span>
+<span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span> <span class="o">=</span> <span class="n">A</span><span class="o">.</span><span class="n">shape</span>
+
+<span class="nb">print</span> <span class="s2">&quot;A:&quot;</span>
+<span class="nb">print</span> <span class="n">A</span>
+
+
+<span class="n">solver</span> <span class="o">=</span> <span class="n">QRMUMPSSolver</span><span class="p">(</span><span class="n">A</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span> <span class="n">solver</span>
+<span class="n">solver</span><span class="o">.</span><span class="n">analyze</span><span class="p">()</span>
+
+<span class="n">solver</span><span class="o">.</span><span class="n">factorize</span><span class="p">()</span>
+
+<span class="nb">print</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">Finding a least-square solution to Ax = b where b is a vector&quot;</span>
+<span class="n">e</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="s1">&#39;d&#39;</span><span class="p">)</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">A</span><span class="o">*</span><span class="n">e</span>
+<span class="nb">print</span> <span class="s2">&quot;b:&quot;</span>
+<span class="nb">print</span> <span class="n">b</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">least_squares</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_almost_equal</span><span class="p">(</span><span class="n">A</span><span class="o">*</span><span class="n">x</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+<span class="nb">print</span> <span class="s2">&quot;x:&quot;</span>
+<span class="nb">print</span> <span class="n">x</span>
+
+<span class="nb">print</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">+</span><span class="s2">&quot;=&quot;</span> <span class="o">*</span> <span class="mi">80</span><span class="o">+</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span>
+<span class="nb">print</span> <span class="s2">&quot;Solving Ax = B where B is a matrix&quot;</span>
+
+<span class="n">B</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">([</span><span class="n">m</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span> <span class="s2">&quot;d&quot;</span><span class="p">)</span>
+<span class="n">B</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">B</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+<span class="n">B</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">B</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="nb">print</span> <span class="s2">&quot;B:&quot;</span>
+<span class="nb">print</span> <span class="n">B</span>
+
+<span class="n">x</span> <span class="o">=</span> <span class="n">solver</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">B</span><span class="p">)</span>
+<span class="nb">print</span> <span class="s2">&quot;x:&quot;</span>
+<span class="nb">print</span> <span class="n">x</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_almost_equal</span><span class="p">(</span><span class="n">A</span><span class="o">*</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">B</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">])</span>
+<span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_almost_equal</span><span class="p">(</span><span class="n">A</span><span class="o">*</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">B</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_almost_equal</span><span class="p">(</span><span class="n">A</span><span class="o">*</span><span class="n">x</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">B</span><span class="p">[:,</span> <span class="mi">2</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+
+
+           </div>
+           <div class="articleComments">
+            
+           </div>
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="installation.html" class="btn btn-neutral" title="Installation" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2015, Sylvain Arreckx, Dominique Orban and Nikolaj van Omme.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/snide/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'./',
+            VERSION:'0.3.dev0',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="_static/jquery.js"></script>
+      <script type="text/javascript" src="_static/underscore.js"></script>
+      <script type="text/javascript" src="_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  
+  
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+  
+
+  
+  
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.StickyNav.enable();
+      });
+  </script>
+   
+
+</body>
+</html>
